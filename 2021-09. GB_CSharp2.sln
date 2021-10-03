@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp2_Lesson2", "CSharp2_Lesson2\CSharp2_Lesson2.csproj", "{599F7D69-8DAD-43FF-9E94-C17ED6146876}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Game", "The Game\The Game.csproj", "{6662A030-7311-49EA-AE2B-8AF150DF83AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{599F7D69-8DAD-43FF-9E94-C17ED6146876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{599F7D69-8DAD-43FF-9E94-C17ED6146876}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{599F7D69-8DAD-43FF-9E94-C17ED6146876}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{599F7D69-8DAD-43FF-9E94-C17ED6146876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6662A030-7311-49EA-AE2B-8AF150DF83AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6662A030-7311-49EA-AE2B-8AF150DF83AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6662A030-7311-49EA-AE2B-8AF150DF83AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6662A030-7311-49EA-AE2B-8AF150DF83AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
