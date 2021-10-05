@@ -9,9 +9,6 @@ namespace The_Game
 {
     class Star : Celestial
     {
-        public static readonly Pen pen = Pens.Orange;
-        public static readonly Brush brush = Brushes.White;
-
         private static readonly Bitmap[] images = {
             Properties.Resources.star1,
             Properties.Resources.star2,
@@ -20,6 +17,7 @@ namespace The_Game
 
         public Star(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
+            pen = Pens.Orange;
             image = images[GameLogic.rand.Next(0, images.Length)];
         }
 
@@ -33,5 +31,7 @@ namespace The_Game
         {
             Move();
         }
+
+        public override void Hit() { }
     }
 }

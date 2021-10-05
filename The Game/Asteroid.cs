@@ -9,9 +9,6 @@ namespace The_Game
 {
     class Asteroid : Celestial
     {
-        public static readonly Pen pen = Pens.White;
-        public static readonly Brush brush = Brushes.White;
-
         private static readonly Bitmap[] images = {
             Properties.Resources.meteorBrown_big1,
             Properties.Resources.meteorBrown_big2,
@@ -21,6 +18,7 @@ namespace The_Game
 
         public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
+            pen = Pens.White;
             image = images[GameLogic.rand.Next(0, images.Length)];
         }
 
@@ -33,6 +31,29 @@ namespace The_Game
         {
             Move();
             Ricochet();
+        }
+
+        public override void Hit()
+        {
+            switch(GameLogic.rand.Next(3))
+            {
+                case 0:
+                    pos.X = 0;
+                    pos.Y = GameLogic.rand.Next(0, GameLogic.Height);
+                    break;
+                case 1:
+                    pos.X = GameLogic.Width - this.size.Width;
+                    pos.Y = GameLogic.rand.Next(0, GameLogic.Height);
+                    break;
+                case 2:
+                    pos.X = GameLogic.rand.Next(0, GameLogic.Width);
+                    pos.Y = 0;
+                    break;
+                case 3:
+                    pos.X = GameLogic.rand.Next(0, GameLogic.Width);
+                    pos.Y = GameLogic.Width - this.size.Height;
+                    break;
+            }
         }
     }
 }
