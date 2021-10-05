@@ -11,11 +11,21 @@ namespace The_Game
     {
         private Queue<Celestial> tail;
 
+        public Celestial Head
+        {
+            get
+            {
+                return tail.Last();
+            }
+        }
+
+
         public Comet(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
             tail = new Queue<Celestial>();
             tail.Enqueue(new Tailpiece(pos, size));
         }
+
 
         public override void DrawInLines()
         {
@@ -29,8 +39,13 @@ namespace The_Game
         {
             Update(tail);
             if (tail.Peek().SmallerThan(2)) tail.Dequeue();
-            Move();
+            if (dir != Point.Empty) Move();
             Ricochet();
+        }
+
+        public override void Hit()
+        {
+            dir = Point.Empty;
         }
 
         protected override void Move()
@@ -40,19 +55,25 @@ namespace The_Game
             tail.Enqueue(new Tailpiece(pos, size));
         }
 
+        public bool Empty()
+        {
+            if (tail.Count == 0)
+                return true;
+            else
+                return false;
+        }
+
 
         private class Tailpiece : Celestial
         {
-            public Brush brush;
-
             public Tailpiece(Point pos, Size size) : base(pos, Point.Empty, size)
             {
-                brush = Brushes.Red;
+                pen = Pens.Red;
             }
 
             public override void DrawInLines()
             {
-                GameLogic.Buffer.Graphics.FillEllipse(brush, pos.X, pos.Y, size.Width, size.Height);
+                GameLogic.Buffer.Graphics.FillEllipse(pen.Brush, pos.X, pos.Y, size.Width, size.Height);
             }
 
             public override void Update()
@@ -60,12 +81,13 @@ namespace The_Game
                 Reduce(2);
                 ChangeBrush();
             }
+            public override void Hit() { }
 
             private void ChangeBrush()
             {
-                //if (SmallerThan(6)) brush = Brushes.Yellow;
-                if (SmallerThan(8)) brush = Brushes.Orange;
-                else brush = Brushes.OrangeRed;
+                //if (SmallerThan(6) && pen != Pens.Yellow) pen = Pens.Yellow;
+                if (SmallerThan(8) && pen != Pens.Orange) pen = Pens.Orange;
+                else if (pen != Pens.OrangeRed) pen = Pens.OrangeRed;
             }
         }
     }

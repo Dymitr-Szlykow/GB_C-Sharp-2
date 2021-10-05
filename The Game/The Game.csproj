@@ -49,6 +49,9 @@
     <Compile Include="Asteroid.cs" />
     <Compile Include="Celestial.cs" />
     <Compile Include="Comet.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="ICollision.cs" />
+    <Compile Include="Missle.cs" />
     <Compile Include="Planet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

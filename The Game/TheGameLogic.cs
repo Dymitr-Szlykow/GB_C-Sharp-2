@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,26 +19,33 @@ namespace The_Game
         public static Random rand;
         public static Timer timer;
 
+        /*
         // static List<Celestial> _celestial_bodies; // нарушает порядок Draw()
+        static List<Celestial>[] allobjects;
+        static List<Celestial> _asteroids;
+        static List<Celestial> _comets;
+        static List<Celestial> _stars;
+        static List<Celestial> planet;
+        static List<Celestial> missle;
+        */
         static Celestial[] _asteroids;
         static Celestial[] _comets;
         static Celestial[] _stars;
         static Planet planet;
+        static Missle missle;
 
         public static int Width { get; set; }
         public static int Height { get; set; }
         #endregion
 
+        #region ЗАПУСК ЯДРА
         public static void Init(Form form)
         {
-            _context = BufferedGraphicsManager.Current;
-            Graphics g = form.CreateGraphics();
+            SetWindow(form);
             rand = new Random();
             timer = new Timer();
 
-            Width = form.ClientSize.Width;
-            Height = form.ClientSize.Height;
-            Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
+            //Missle.pen.Width = 2.0F;
 
             Load();
 
@@ -45,6 +53,22 @@ namespace The_Game
             timer.Tick += Timer_Tick;
             timer.Start();
         }
+
+        public static void SetWindow(Form form)
+        {
+            if (form.ClientSize.Width < 0 || 1000 < form.ClientSize.Width || form.ClientSize.Height < 0 || 1000 < form.ClientSize.Height)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            _context = BufferedGraphicsManager.Current;
+            Graphics g = form.CreateGraphics();
+            Width = form.ClientSize.Width;
+            Height = form.ClientSize.Height;
+            Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
+            Buffer.Graphics.PageUnit = GraphicsUnit.Pixel;
+        }
+        #endregion
 
 
         #region ГЛАВНЫЙ ЦИКЛ
@@ -58,19 +82,14 @@ namespace The_Game
         {
             Buffer.Graphics.Clear(Color.Black);
 
-            try
-            {
+            if (Properties.Resources.background != null)
                 Buffer.Graphics.DrawImage(Properties.Resources.background, 0, 0, Width, Height);
-            }
-            catch
-            {
-                // Buffer.Graphics.FillRectangle(Brushes.Blue, new Rectangle(0, 0, Width, Height));
-            }
 
             Celestial.Draw(_stars);
             Celestial.Draw(planet);
             Celestial.Draw(_asteroids);
             Celestial.Draw(_comets);
+            Celestial.Draw(missle);
 
             Buffer.Render();
         }
@@ -78,9 +97,29 @@ namespace The_Game
         public static void Update()
         {
             UpdateStars();
-            // Celestial.Update(planet);  // не происходит изменений, TODO?
-            Celestial.Update(_asteroids);
-            Celestial.Update(_comets);
+
+            Celestial.Update(missle);
+            if (missle.OutOfView() || missle.StandsStill())
+                missle = MakeMissle();
+
+            UpdateWithHit(_asteroids, SystemSounds.Hand);
+            //CheckAsteroidsOnCollisions();
+
+            UpdateWithHit(_comets, SystemSounds.Exclamation);
+            UpdateComets();
+        }
+
+        public static void UpdateWithHit(Celestial[] objset, SystemSound sound)
+        {
+            foreach (var one in objset)
+            {
+                one.Update();
+                if (one.CollidesWith(missle))
+                {
+                    sound.Play();
+                    one.Hit();
+                }
+            }
         }
 
         public static void UpdateStars()
@@ -96,17 +135,56 @@ namespace The_Game
             }
             _stars = stars.ToArray();
         }
+
+        public static void UpdateComets()
+        {
+            var comets = new List<Celestial>();
+            foreach (Comet comet in _comets)
+            {
+                if (comet.Empty())
+                    comets.Add(MakeComet());
+                else
+                    comets.Add(comet);
+            }
+            _comets = comets.ToArray();
+        }
+
+        public static void CheckAsteroidsOnCollisions()
+        {
+            for (int i = 0;  i < _asteroids.Length - 1;  i++)
+            {
+                for (int j = i + 1;  j < _asteroids.Length;  j++)
+                {
+                    if (_asteroids[i].CollidesWith(_asteroids[j]))
+                    {
+                        //System.Media.SystemSounds.Hand.Play(); // не при данном применении звука // TODO
+                        _asteroids[i].Bump();
+                        _asteroids[j].Bump();
+                    }
+                }
+            }
+        }
         #endregion
 
 
         #region ИНИЦИАЛИЗАЦИЯ ОБЪЕКТОВ В ИГРЕ
         public static void Load()
         {
+            /*
+            allobjects = new List<Celestial>[5];
+            _stars = allobjects[0] = new List<Celestial>();
+            planet = allobjects[1] = new List<Celestial>();
+            _asteroids = allobjects[2] = new List<Celestial>();
+            _comets = allobjects[3] = new List<Celestial>();
+            missle = allobjects[4] = new List<Celestial>();
+            // так Celestial.Draw(allobjects) должна сохранять порядок прорисовки
+            */
+
             planet = new Planet(100, 100, 200, 200);
-            // _celestial_bodies = new List<Celestial>();
+            missle = MakeMissle();
             LoadAsteroids(12);
             LoadStars(25);
-            LoadComets(2); // сильно нагружают
+            LoadComets(2);
         }
 
         private static void LoadAsteroids(int number)
@@ -173,6 +251,21 @@ namespace The_Game
             }
 
             return new Comet(new Point(x, y), new Point(dirX, dirY), new Size(size, size));
+        }
+
+        private static Missle MakeMissle()
+        {
+            return new Missle(
+                new Point(planet.Pos.X + planet.Size.Width / 2, planet.Pos.Y + planet.Size.Height / 2),
+                new Point(rand.Next(-20, 20), rand.Next(-20, 20)),
+                new Size(rand.Next(9, 12), rand.Next(9, 12))
+            );
+            /*
+            return new Missle(
+                new Point(0, rand.Next(50, Height - 50)),
+                new Point(rand.Next(5, 15), rand.Next(-30, 30)),
+                new Size(rand.Next(6, 12), rand.Next(6, 12))
+            ); */
         }
         #endregion
     }
