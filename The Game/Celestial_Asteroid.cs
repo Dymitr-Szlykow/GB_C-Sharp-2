@@ -15,11 +15,12 @@ namespace The_Game
             Properties.Resources.meteorBrown_big3,
             Properties.Resources.meteorBrown_big4
         };
+        public override int ScoreCost { get { return 10; } }
 
         public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
             pen = Pens.White;
-            image = images[GameLogic.rand.Next(0, images.Length)];
+            image = images[GameLogic.rand.Next(images.Length)];
         }
 
         public override void DrawInLines()
@@ -38,22 +39,23 @@ namespace The_Game
             switch(GameLogic.rand.Next(3))
             {
                 case 0:
-                    pos.X = 0;
-                    pos.Y = GameLogic.rand.Next(0, GameLogic.Height);
+                    pos.X = -this.size.Width;
+                    pos.Y = GameLogic.rand.Next(-this.size.Height, GameLogic.Height);
                     break;
                 case 1:
-                    pos.X = GameLogic.Width - this.size.Width;
-                    pos.Y = GameLogic.rand.Next(0, GameLogic.Height);
+                    pos.X = GameLogic.Width;
+                    pos.Y = GameLogic.rand.Next(-this.size.Height, GameLogic.Height);
                     break;
                 case 2:
-                    pos.X = GameLogic.rand.Next(0, GameLogic.Width);
-                    pos.Y = 0;
+                    pos.X = GameLogic.rand.Next(-this.size.Width, GameLogic.Width);
+                    pos.Y = -this.size.Height;
                     break;
                 case 3:
-                    pos.X = GameLogic.rand.Next(0, GameLogic.Width);
-                    pos.Y = GameLogic.Width - this.size.Height;
+                    pos.X = GameLogic.rand.Next(-this.size.Width, GameLogic.Width);
+                    pos.Y = GameLogic.Height;
                     break;
             }
         }
+        public override void Hit(int damage) { }
     }
 }

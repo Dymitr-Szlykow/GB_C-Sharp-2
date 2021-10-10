@@ -11,13 +11,8 @@ namespace The_Game
     {
         private Queue<Celestial> tail;
 
-        public Celestial Head
-        {
-            get
-            {
-                return tail.Last();
-            }
-        }
+        public Celestial Head { get { return tail.Last(); } }
+        public override int ScoreCost { get { return 50; } }
 
 
         public Comet(Point pos, Point dir, Size size) : base(pos, dir, size)
@@ -39,14 +34,18 @@ namespace The_Game
         {
             Update(tail);
             if (tail.Peek().SmallerThan(2)) tail.Dequeue();
-            if (dir != Point.Empty) Move();
-            Ricochet();
+            if (dir != Point.Empty)
+            {
+                Move();
+                Ricochet();
+            }
         }
 
         public override void Hit()
         {
             dir = Point.Empty;
         }
+        public override void Hit(int damage) { }
 
         protected override void Move()
         {
@@ -66,6 +65,8 @@ namespace The_Game
 
         private class Tailpiece : Celestial
         {
+            public override int ScoreCost { get { return 50; } }
+
             public Tailpiece(Point pos, Size size) : base(pos, Point.Empty, size)
             {
                 pen = Pens.Red;
@@ -82,6 +83,7 @@ namespace The_Game
                 ChangeBrush();
             }
             public override void Hit() { }
+            public override void Hit(int damage) { }
 
             private void ChangeBrush()
             {

@@ -14,11 +14,12 @@ namespace The_Game
             Properties.Resources.star2,
             Properties.Resources.star3
         };
+        public override int ScoreCost { get; }
 
         public Star(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
             pen = Pens.Orange;
-            image = images[GameLogic.rand.Next(0, images.Length)];
+            image = images[GameLogic.rand.Next(images.Length)];
         }
 
         public override void DrawInLines()
@@ -33,5 +34,6 @@ namespace The_Game
         }
 
         public override void Hit() { }
+        public override void Hit(int damage) { }
     }
 }

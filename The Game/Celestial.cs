@@ -41,13 +41,8 @@ namespace The_Game
         #endregion
 
         #region ИНТЕРФЕЙС ICollision
-        public Rectangle Rect
-        {
-            get
-            {
-                return new Rectangle(pos, size);
-            }
-        }
+        public Rectangle Rect { get { return new Rectangle(pos, size); } }
+        public abstract int ScoreCost { get; }
 
         public bool CollidesWith(ICollision other)
         {
@@ -59,15 +54,12 @@ namespace The_Game
         #endregion
 
         #region МЕТОДЫ: ОТРИСОВКА
-        public static void Draw(Celestial obj)
-        {
-            obj.Draw();
-        }
+        public static void Draw(Celestial obj) => obj.Draw();
         public static void Draw(Celestial[] objset)
         {
             foreach (Celestial obj in objset)
             {
-                obj.Draw();
+                if (obj != null) obj.Draw();
             }
         }
         public static void Draw(List<Celestial> objset)
@@ -91,22 +83,16 @@ namespace The_Game
         }
 
         public abstract void DrawInLines();
-        public void DrawImage()
-        {
-            GameLogic.Buffer.Graphics.DrawImage(image, pos.X, pos.Y, size.Width, size.Height);
-        }
+        public virtual void DrawImage() => GameLogic.Buffer.Graphics.DrawImage(image, pos.X, pos.Y, size.Width, size.Height);
         #endregion
 
         #region МЕТОДЫ: В ЦИКЛЕ
-        public static void Update(Celestial obj)
-        {
-            obj.Update();
-        }
+        public static void Update(Celestial obj) => obj.Update();
         public static void Update(Celestial[] objset)
         {
             foreach (Celestial obj in objset)
             {
-                obj.Update();
+                if (obj != null) obj.Update();
             }
         }
         public static void Update(List<Celestial> objset)
@@ -125,6 +111,7 @@ namespace The_Game
         }
         public abstract void Update();
         public abstract void Hit();
+        public abstract void Hit(int damage);
         #endregion
 
         #region МЕТОДЫ: ПОВЕДЕНИЕ
@@ -142,7 +129,7 @@ namespace The_Game
                 dir.Y = -dir.Y;
         }
 
-        public void Bump()
+        public void Bump(ICollision other)
         {
             // TODO
         }

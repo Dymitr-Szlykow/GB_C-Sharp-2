@@ -46,16 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Asteroid.cs" />
+    <Compile Include="Celestial_Asteroid.cs" />
     <Compile Include="Celestial.cs" />
-    <Compile Include="Comet.cs" />
-    <Compile Include="Exceptions.cs" />
+    <Compile Include="Classes_events.cs" />
+    <Compile Include="Celestial_Comet.cs" />
+    <Compile Include="Classes_exceptions.cs" />
     <Compile Include="ICollision.cs" />
-    <Compile Include="Missle.cs" />
-    <Compile Include="Planet.cs" />
+    <Compile Include="Celestial_missle.cs" />
+    <Compile Include="Celestial_Planet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Star.cs" />
+    <Compile Include="Celestial_Ship.cs" />
+    <Compile Include="Celestial_star.cs" />
     <Compile Include="TheGameLogic.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -106,6 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\star3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ship.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\laserRed011.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

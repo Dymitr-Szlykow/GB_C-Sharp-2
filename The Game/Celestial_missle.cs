@@ -16,13 +16,14 @@ namespace The_Game
                 return new Size((size.Width - dir.X) / 2, (size.Height - dir.Y) / 2);
             }
         }
+        public override int ScoreCost { get; }
 
         public Missle(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
-        pen = Pens.MediumVioletRed;
-        //image = Properties.Resources.bullet;
-        //pen.Width = 2.0F;
-    }
+            pen = Pens.MediumVioletRed;
+            //image = Properties.Resources.laserRed011;
+            //pen.Width = 2.0F;
+        }
 
         public override void DrawInLines()
         {
@@ -34,5 +35,6 @@ namespace The_Game
             Move();
         }
         public override void Hit() { }
+        public override void Hit(int damage) { }
     }
 }

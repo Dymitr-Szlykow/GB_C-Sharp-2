@@ -10,6 +10,7 @@ namespace The_Game
     interface ICollision
     {
         Rectangle Rect { get; }
+        int ScoreCost { get; }
 
         bool CollidesWith(ICollision other);
     }

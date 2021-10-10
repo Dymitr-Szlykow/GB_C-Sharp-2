@@ -1,9 +1,0 @@
-C:\craft_Development\2021-09. GB_CSharp2\The Game\bin\Debug\The Game.exe.config
-C:\craft_Development\2021-09. GB_CSharp2\The Game\bin\Debug\The Game.exe
-C:\craft_Development\2021-09. GB_CSharp2\The Game\bin\Debug\The Game.pdb
-C:\craft_Development\2021-09. GB_CSharp2\The Game\obj\Debug\The_Game.Properties.Resources.resources
-C:\craft_Development\2021-09. GB_CSharp2\The Game\obj\Debug\The Game.csproj.GenerateResource.cache
-C:\craft_Development\2021-09. GB_CSharp2\The Game\obj\Debug\The Game.csproj.CoreCompileInputs.cache
-C:\craft_Development\2021-09. GB_CSharp2\The Game\obj\Debug\The Game.exe
-C:\craft_Development\2021-09. GB_CSharp2\The Game\obj\Debug\The Game.pdb
-C:\craft_Development\2021-09. GB_CSharp2\The Game\obj\Debug\The Game.csproj.AssemblyReference.cache

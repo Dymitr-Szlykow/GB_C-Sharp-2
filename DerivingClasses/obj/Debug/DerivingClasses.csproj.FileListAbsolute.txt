@@ -1,7 +1,0 @@
-C:\craft_Development\2021-09. GB_CSharp2\DerivingClasses\bin\Debug\DerivingClasses.exe.config
-C:\craft_Development\2021-09. GB_CSharp2\DerivingClasses\bin\Debug\DerivingClasses.exe
-C:\craft_Development\2021-09. GB_CSharp2\DerivingClasses\bin\Debug\DerivingClasses.pdb
-C:\craft_Development\2021-09. GB_CSharp2\DerivingClasses\obj\Debug\DerivingClasses.csproj.AssemblyReference.cache
-C:\craft_Development\2021-09. GB_CSharp2\DerivingClasses\obj\Debug\DerivingClasses.csproj.CoreCompileInputs.cache
-C:\craft_Development\2021-09. GB_CSharp2\DerivingClasses\obj\Debug\DerivingClasses.exe
-C:\craft_Development\2021-09. GB_CSharp2\DerivingClasses\obj\Debug\DerivingClasses.pdb
