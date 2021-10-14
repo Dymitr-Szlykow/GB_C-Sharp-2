@@ -25,16 +25,14 @@ namespace The_Game
             //pen.Width = 2.0F;
         }
 
-        public override void DrawInLines()
+        public override void DrawInLines(Graphics hostGraphics)
         {
-            GameLogic.Buffer.Graphics.DrawLine(pen, pos + Startpoint, pos + Startpoint + new Size(dir));
+            hostGraphics.DrawLine(pen, pos + Startpoint, pos + Startpoint + new Size(dir));
         }
 
         public override void Update()
         {
             Move();
         }
-        public override void Hit() { }
-        public override void Hit(int damage) { }
     }
 }

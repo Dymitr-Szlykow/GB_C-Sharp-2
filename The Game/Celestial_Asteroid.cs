@@ -20,12 +20,12 @@ namespace The_Game
         public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
             pen = Pens.White;
-            image = images[GameLogic.rand.Next(images.Length)];
+            image = images[InGame.rand.Next(images.Length)];
         }
 
-        public override void DrawInLines()
+        public override void DrawInLines(Graphics hostGraphics)
         {
-            GameLogic.Buffer.Graphics.DrawEllipse(pen, pos.X, pos.Y, size.Width, size.Height);
+            hostGraphics.DrawEllipse(pen, pos.X, pos.Y, size.Width, size.Height);
         }
 
         public override void Update()
@@ -33,29 +33,5 @@ namespace The_Game
             Move();
             Ricochet();
         }
-
-        public override void Hit()
-        {
-            switch(GameLogic.rand.Next(3))
-            {
-                case 0:
-                    pos.X = -this.size.Width;
-                    pos.Y = GameLogic.rand.Next(-this.size.Height, GameLogic.Height);
-                    break;
-                case 1:
-                    pos.X = GameLogic.Width;
-                    pos.Y = GameLogic.rand.Next(-this.size.Height, GameLogic.Height);
-                    break;
-                case 2:
-                    pos.X = GameLogic.rand.Next(-this.size.Width, GameLogic.Width);
-                    pos.Y = -this.size.Height;
-                    break;
-                case 3:
-                    pos.X = GameLogic.rand.Next(-this.size.Width, GameLogic.Width);
-                    pos.Y = GameLogic.Height;
-                    break;
-            }
-        }
-        public override void Hit(int damage) { }
     }
 }

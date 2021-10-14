@@ -22,11 +22,11 @@ namespace The_Game
         }
 
 
-        public override void DrawInLines()
+        public override void DrawInLines(Graphics hostGraphics)
         {
             foreach (Tailpiece piece in tail)
             {
-                piece.Draw();
+                piece.Draw(hostGraphics);
             }
         }
 
@@ -34,7 +34,7 @@ namespace The_Game
         {
             Update(tail);
             if (tail.Peek().SmallerThan(2)) tail.Dequeue();
-            if (dir != Point.Empty)
+            if (Dir != Point.Empty)
             {
                 Move();
                 Ricochet();
@@ -45,7 +45,6 @@ namespace The_Game
         {
             dir = Point.Empty;
         }
-        public override void Hit(int damage) { }
 
         protected override void Move()
         {
@@ -54,7 +53,7 @@ namespace The_Game
             tail.Enqueue(new Tailpiece(pos, size));
         }
 
-        public bool Empty()
+        public override bool IsEmpty()
         {
             if (tail.Count == 0)
                 return true;
@@ -72,9 +71,9 @@ namespace The_Game
                 pen = Pens.Red;
             }
 
-            public override void DrawInLines()
+            public override void DrawInLines(Graphics hostGraphics)
             {
-                GameLogic.Buffer.Graphics.FillEllipse(pen.Brush, pos.X, pos.Y, size.Width, size.Height);
+                hostGraphics.FillEllipse(pen.Brush, pos.X, pos.Y, size.Width, size.Height);
             }
 
             public override void Update()
@@ -82,8 +81,6 @@ namespace The_Game
                 Reduce(2);
                 ChangeBrush();
             }
-            public override void Hit() { }
-            public override void Hit(int damage) { }
 
             private void ChangeBrush()
             {

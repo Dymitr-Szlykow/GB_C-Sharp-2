@@ -6,13 +6,32 @@ using System.Threading.Tasks;
 
 namespace The_Game
 {
-    class DeathEventArgs : EventArgs
+    class EndGameEventArgs : EventArgs  // TODO уточнить, доработать
     {
-        public int LastDamage { get; set; }
+        public string _onScreenMessage;
+        public string _logMessage;
 
-        public DeathEventArgs(int damage)
+        public EndGameEventArgs()
         {
-            LastDamage = damage;
+            _onScreenMessage = string.Empty;
+            _logMessage = string.Empty;
         }
+        public EndGameEventArgs(string onScreenMessage)
+        {
+            _onScreenMessage = onScreenMessage;
+            _logMessage = string.Empty;
+        }
+        public EndGameEventArgs(string onScreenMessage, string logMessage)
+        {
+            _onScreenMessage = onScreenMessage;
+            _logMessage = logMessage;
+        }
+    }
+
+    class DeathEventArgs : EndGameEventArgs
+    {
+        public int lastDamage;
+        public DeathEventArgs(int damage, string onScreenMessage) : base(onScreenMessage) => lastDamage = damage;
+        public DeathEventArgs(int damage, string onScreenMessage, string logMessage) : base(onScreenMessage, logMessage) => lastDamage = damage;
     }
 }

@@ -9,9 +9,11 @@ namespace The_Game
 {
     class Ship : Celestial
     {
-        public int Energy { get; private set; }
+        public int Energy { get; set; }
         public int LastDamage { get; private set; }
+        public bool MayShoot { get; private set; }
         public override int ScoreCost { get; }
+        public override Rectangle Rect { get { return new Rectangle(pos.X + 4, pos.Y +4, size.Width - 4, size.Height - 4); } }
 
 
         public event EventHandler<DeathEventArgs> Death;
@@ -21,20 +23,23 @@ namespace The_Game
         {
             Energy = 100;
             LastDamage = 0;
+            MayShoot = true;
             pen = Pens.White;
             image = Properties.Resources.ship;
         }
 
-        public override void DrawInLines()
+        public override void DrawInLines(Graphics hostGraphics)
         {
-            GameLogic.Buffer.Graphics.DrawLine(pen, pos.X, pos.Y, pos.X, pos.Y + size.Height);
-            GameLogic.Buffer.Graphics.DrawLine(pen, pos.X, pos.Y + size.Height, pos.X + size.Width, pos.Y + size.Height / 2);
-            GameLogic.Buffer.Graphics.DrawLine(pen, pos.X, pos.Y, pos.X + size.Width, pos.Y + size.Height / 2);
+            hostGraphics.DrawLine(pen, pos.X, pos.Y, pos.X, pos.Y + size.Height);
+            hostGraphics.DrawLine(pen, pos.X, pos.Y + size.Height, pos.X + size.Width, pos.Y + size.Height / 2);
+            hostGraphics.DrawLine(pen, pos.X, pos.Y, pos.X + size.Width, pos.Y + size.Height / 2);
         }
 
-        public override void Update() { }
+        public override void Update()
+        {
+            CountdownShootImpedance();
+        }
 
-        public override void Hit() { }
         public override void Hit(int damage)
         {
             LastDamage = damage;
@@ -54,10 +59,10 @@ namespace The_Game
         }
         public void MoveDown()
         {
-            if (pos.Y <= GameLogic.Height - size.Height)
+            if (pos.Y <= InGame.Height - size.Height)
             {
-                if (GameLogic.Height - pos.Y < dir.Y)
-                    pos.Y = GameLogic.Height - size.Height - 1;
+                if (InGame.Height - pos.Y < dir.Y)
+                    pos.Y = InGame.Height - size.Height - 1;
                 else
                     pos.Y += dir.Y;
             }
@@ -74,17 +79,30 @@ namespace The_Game
         }
         public void MoveRight()
         {
-            if (pos.X < GameLogic.Width / 3 - size.Width)
+            if (pos.X < InGame.Width / 3 - size.Width)
                 pos.X += dir.X;
         }
 
-        public void Dies()
+        public void Shot()
         {
-            if (Death != null)
+            NickOfTime++;
+            MayShoot = false;
+        }
+
+        private void CountdownShootImpedance()
+        {
+            if (NickOfTime > 0)
             {
-                Death.Invoke(this, new DeathEventArgs(LastDamage));
+                NickOfTime++;
+                if (NickOfTime > 10)
+                {
+                    NickOfTime = 0;
+                    MayShoot = true;
+                }
             }
         }
+
+        public void Dies() => Death?.Invoke(this, new DeathEventArgs(LastDamage, "Game over!", "корабль уничтожен"));
         #endregion
     }
 }
