@@ -13,9 +13,11 @@ namespace The_Game
         protected Point pos;
         protected Point dir;
         protected Size size;
+        //protected BaseScene host;
         protected Pen pen;
         protected Bitmap image;
 
+        public int NickOfTime { get; protected set; }
         public Point Pos { get { return pos; } }
         public Point Dir { get { return dir; } }
         public Size Size { get { return size; } }
@@ -29,27 +31,27 @@ namespace The_Game
                 throw new GameObjectException("Необходимо задать объекту действительные значения начального положения и размера.");
             if (size.Width < 0 || size.Height < 0)
                 throw new GameObjectException("Попытка создать объект с недопустимым размером.");
-            if (pos.X < -2 * size.Width || pos.X > GameLogic.Width + 2 * size.Width || pos.Y < -2 * size.Height || pos.Y > GameLogic.Height + 2 * size.Height)
-                throw new GameObjectException("Попытка создать объект слишком далеко за краем экрана.");
+            //if (pos.X < -2 * size.Width || pos.X > InGame.Width + 2 * size.Width || pos.Y < -2 * size.Height || pos.Y > InGame.Height + 2 * size.Height)
+            //    throw new GameObjectException("Попытка создать объект слишком далеко за краем экрана.");
             if (dir.X < -50 || 50 < dir.X || dir.Y < -50 || 50 < dir.Y)
                 throw new GameObjectException("Попытка создать объект со слишком высокой скоростью.");
 
             this.pos = pos;
             this.dir = dir;
             this.size = size;
+            NickOfTime = 0;
         }
+        //public Celestial(Point pos, Point dir, Size size, BaseScene host) : this(pos, dir, size)
+        //{
+        //    this.host = host;
+        //}
         #endregion
 
         #region ИНТЕРФЕЙС ICollision
-        public Rectangle Rect
-        {
-            get
-            {
-                return new Rectangle(pos, size);
-            }
-        }
+        public virtual Rectangle Rect { get { return new Rectangle(pos, size); } }
+        public virtual int ScoreCost { get; }
 
-        public bool CollidesWith(ICollision other)
+        public virtual bool CollidesWith(ICollision other)
         {
             if (Rect.IntersectsWith(other.Rect))
                 return true;
@@ -59,54 +61,45 @@ namespace The_Game
         #endregion
 
         #region МЕТОДЫ: ОТРИСОВКА
-        public static void Draw(Celestial obj)
-        {
-            obj.Draw();
-        }
-        public static void Draw(Celestial[] objset)
+        public static void Draw(Celestial obj, Graphics hostGraphics) => obj.Draw(hostGraphics);
+        public static void Draw(Celestial[] objset, Graphics hostGraphics)
         {
             foreach (Celestial obj in objset)
             {
-                obj.Draw();
+                if (obj != null) obj.Draw(hostGraphics);
             }
         }
-        public static void Draw(List<Celestial> objset)
+        public static void Draw(List<Celestial> objset, Graphics hostGraphics)
         {
             foreach (Celestial obj in objset)
             {
-                obj.Draw();
+                obj.Draw(hostGraphics);
             }
         }
-        public static void Draw(List<Celestial>[] objset)
+        public static void Draw(List<Celestial>[] objset, Graphics hostGraphics)
         {
             foreach (List<Celestial> objlist in objset)
             {
-                Draw(objlist);
+                Draw(objlist, hostGraphics);
             }
         }
-        public void Draw()
+        public void Draw(Graphics hostGraphics)
         {
-            if (image != null) DrawImage();
-            else DrawInLines();
+            if (image != null) DrawImage(hostGraphics);
+            else DrawInLines(hostGraphics);
         }
 
-        public abstract void DrawInLines();
-        public void DrawImage()
-        {
-            GameLogic.Buffer.Graphics.DrawImage(image, pos.X, pos.Y, size.Width, size.Height);
-        }
+        public abstract void DrawInLines(Graphics hostGraphics);
+        public virtual void DrawImage(Graphics hostGraphics) => hostGraphics.DrawImage(image, pos.X, pos.Y, size.Width, size.Height);
         #endregion
 
         #region МЕТОДЫ: В ЦИКЛЕ
-        public static void Update(Celestial obj)
-        {
-            obj.Update();
-        }
+        public static void Update(Celestial obj) => obj.Update();
         public static void Update(Celestial[] objset)
         {
             foreach (Celestial obj in objset)
             {
-                obj.Update();
+                if (obj != null) obj.Update();
             }
         }
         public static void Update(List<Celestial> objset)
@@ -124,7 +117,9 @@ namespace The_Game
             }
         }
         public abstract void Update();
-        public abstract void Hit();
+        public virtual void Hit() => throw new NotImplementedException();
+        public virtual void Hit(int damage) => throw new NotImplementedException();
+        public virtual void Picked(Ship player) => throw new NotImplementedException();
         #endregion
 
         #region МЕТОДЫ: ПОВЕДЕНИЕ
@@ -134,15 +129,15 @@ namespace The_Game
             pos.Y += dir.Y;
         }
 
-        protected void Ricochet()
+        protected void Ricochet() //(Size hostWindow)
         {
-            if ((pos.X < 0 && dir.X < 0) || (pos.X > GameLogic.Width - size.Width && dir.X > 0))
+            if ((pos.X < 0 && dir.X < 0) || (pos.X > InGame.Width - size.Width && dir.X > 0))
                 dir.X = -dir.X;
-            if ((pos.Y < 0 && dir.Y < 0) || (pos.Y > GameLogic.Height - size.Height && dir.Y > 0))
+            if ((pos.Y < 0 && dir.Y < 0) || (pos.Y > InGame.Height - size.Height && dir.Y > 0))
                 dir.Y = -dir.Y;
         }
 
-        public void Bump()
+        public void Bump(ICollision other)
         {
             // TODO
         }
@@ -155,9 +150,10 @@ namespace The_Game
         #endregion
 
         #region ПРОВЕРКИ
+        public virtual bool IsEmpty() => throw new NotImplementedException();
         public bool OutOfView()
         {
-            if (pos.X < -size.Width || pos.X > GameLogic.Width || pos.Y < -size.Height || pos.Y > GameLogic.Height)
+            if (pos.X < -size.Width || pos.X > InGame.Width || pos.Y < -size.Height || pos.Y > InGame.Height)
                 return true;
             else
                 return false;

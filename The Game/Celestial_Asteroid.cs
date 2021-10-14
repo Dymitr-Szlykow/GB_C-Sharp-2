@@ -15,16 +15,17 @@ namespace The_Game
             Properties.Resources.meteorBrown_big3,
             Properties.Resources.meteorBrown_big4
         };
+        public override int ScoreCost { get { return 10; } }
 
         public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
             pen = Pens.White;
-            image = images[GameLogic.rand.Next(0, images.Length)];
+            image = images[InGame.rand.Next(images.Length)];
         }
 
-        public override void DrawInLines()
+        public override void DrawInLines(Graphics hostGraphics)
         {
-            GameLogic.Buffer.Graphics.DrawEllipse(pen, pos.X, pos.Y, size.Width, size.Height);
+            hostGraphics.DrawEllipse(pen, pos.X, pos.Y, size.Width, size.Height);
         }
 
         public override void Update()
