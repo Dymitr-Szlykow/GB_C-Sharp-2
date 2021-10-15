@@ -21,17 +21,22 @@ namespace The_Game
             Application.Run(new Form1());
             */
 
-            Form theForm = new Form();
-            theForm.MinimumSize = new System.Drawing.Size(800, 500);
-            theForm.MaximumSize = new System.Drawing.Size(800, 500);
-            theForm.MinimizeBox = false;
-            theForm.MaximizeBox = false;
-            theForm.StartPosition = FormStartPosition.CenterScreen;
-            theForm.Text = "Астероиды";
+            Form theForm = new Form()
+            {
+                MinimumSize = new System.Drawing.Size(800, 500),
+                MaximumSize = new System.Drawing.Size(800, 500),
+                MinimizeBox = false,
+                MaximizeBox = false,
+                StartPosition = FormStartPosition.CenterScreen,
+                Text = "Астероиды"
+            };
+            theForm.Show();
 
-            GameLogic.Init(theForm);
-            //theForm.Show();
-            //GameLogic.Draw();
+            SceneManager
+                .Boot()                       // обновить SceneManager, сбросить управляемую сцену (возвращает SceneManager)
+                .PrepareScene<Menu>(theForm)  // установить в обновленный SceneManager новую сцену (возвращает IScene)
+                .Draw();                      // отрисовать ее
+
             Application.Run(theForm);
         }
     }

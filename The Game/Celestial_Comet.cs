@@ -11,13 +11,8 @@ namespace The_Game
     {
         private Queue<Celestial> tail;
 
-        public Celestial Head
-        {
-            get
-            {
-                return tail.Last();
-            }
-        }
+        public Celestial Head { get { return tail.Last(); } }
+        public override int ScoreCost { get { return 50; } }
 
 
         public Comet(Point pos, Point dir, Size size) : base(pos, dir, size)
@@ -27,11 +22,11 @@ namespace The_Game
         }
 
 
-        public override void DrawInLines()
+        public override void DrawInLines(Graphics hostGraphics)
         {
             foreach (Tailpiece piece in tail)
             {
-                piece.Draw();
+                piece.Draw(hostGraphics);
             }
         }
 
@@ -39,8 +34,11 @@ namespace The_Game
         {
             Update(tail);
             if (tail.Peek().SmallerThan(2)) tail.Dequeue();
-            if (dir != Point.Empty) Move();
-            Ricochet();
+            if (Dir != Point.Empty)
+            {
+                Move();
+                Ricochet();
+            }
         }
 
         public override void Hit()
@@ -55,7 +53,7 @@ namespace The_Game
             tail.Enqueue(new Tailpiece(pos, size));
         }
 
-        public bool Empty()
+        public override bool IsEmpty()
         {
             if (tail.Count == 0)
                 return true;
@@ -66,14 +64,16 @@ namespace The_Game
 
         private class Tailpiece : Celestial
         {
+            public override int ScoreCost { get { return 50; } }
+
             public Tailpiece(Point pos, Size size) : base(pos, Point.Empty, size)
             {
                 pen = Pens.Red;
             }
 
-            public override void DrawInLines()
+            public override void DrawInLines(Graphics hostGraphics)
             {
-                GameLogic.Buffer.Graphics.FillEllipse(pen.Brush, pos.X, pos.Y, size.Width, size.Height);
+                hostGraphics.FillEllipse(pen.Brush, pos.X, pos.Y, size.Width, size.Height);
             }
 
             public override void Update()
@@ -81,7 +81,6 @@ namespace The_Game
                 Reduce(2);
                 ChangeBrush();
             }
-            public override void Hit() { }
 
             private void ChangeBrush()
             {

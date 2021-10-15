@@ -8,12 +8,33 @@ namespace DerivingClasses
 {
     class Program
     {
-        static CrewList1 employees1;
-        static CrewList2 employees2;
+        //static CrewList1 employees1 = new CrewList1();
+        //static CrewList2 employees2 = new CrewList2();
+        //    или
+        static CrewList1<Employee> employees1 = new CrewList1<Employee>();
+        static CrewList2<Employee> employees2 = new CrewList2<Employee>();
 
         static void Report(CrewList list)
         {
             Console.WriteLine("\n   В массиве {0}", list.GetType() == typeof(CrewList1) ? "статическом (Employee[]):" : "динамическом (List<Employee>):");
+            if (list.Count == 0)
+                Console.WriteLine("\t- массив пуст -");
+            else
+            {
+                foreach (Employee one in list)
+                {
+                    Console.Write("\t{0}, {1}:", one.Name, one.GetType() == typeof(HourPaid) ? "почасовая оплата" : "фиксированная ставка");
+                    Console.CursorLeft = 52;
+                    Console.Write("ставка {0} руб{1}", one.Salary, one.GetType() == typeof(HourPaid) ? "/ч" : "");
+                    Console.CursorLeft = 72;
+                    Console.WriteLine("среднемесячная опалата {0} руб", one.GetMonthAverageSalary());
+                }
+            }
+        }
+
+        static void Report(CrewList<Employee> list)
+        {
+            Console.WriteLine("\n   В массиве {0}", list.GetType() == typeof(CrewList1<Employee>) ? "статическом (Employee[]):" : "динамическом (List<Employee>):");
             if (list.Count == 0)
                 Console.WriteLine("\t- массив пуст -");
             else
@@ -56,7 +77,6 @@ namespace DerivingClasses
             var emp6 = new FixPaid("Андрей", 21590);
             var emp7 = new FixPaid("Лариса Ивановна", 26624);
 
-            employees1 = new CrewList1();
             employees1.Add(emp1);
             employees1.Add(emp2);
             employees1.Add(emp3);
@@ -65,7 +85,6 @@ namespace DerivingClasses
             employees1.Add(emp6);
             employees1.Add(emp7);
 
-            employees2 = new CrewList2();
             employees2.Add(emp1);
             employees2.Add(emp2);
             employees2.Add(emp3);
