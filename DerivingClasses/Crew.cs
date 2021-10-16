@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Adendum.DerivingClasses;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DerivingClasses
+namespace Addendum.DerivingClasses
 {   abstract class CrewList : ICollection, ICollection<Employee>, IEnumerable
     {
         public abstract int Count { get; }

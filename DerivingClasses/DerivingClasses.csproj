@@ -46,6 +46,9 @@
     <Compile Include="Crew.cs" />
     <Compile Include="Crew_generic.cs" />
     <Compile Include="Employee.cs" />
+    <Compile Include="Lesson4_GenericLambdaLinq.cs" />
+    <Compile Include="Lessons2_DerivingClasses.cs" />
+    <Compile Include="msdocsExamples.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

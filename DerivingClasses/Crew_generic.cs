@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DerivingClasses
+namespace Addendum.DerivingClasses
 {
     abstract class CrewList<T> : ICollection, ICollection<T>, IEnumerable, IEnumerable<T>
     {
