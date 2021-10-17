@@ -33,9 +33,10 @@ namespace The_Game
         #endregion
 
         #region ЯДРО
-        public override void Init(Form form)
+        public override void Init(SceneArgs instructions)
         {
-            base.Init(form);
+            base.Init(instructions);
+
             _stars = InGame.InitObjList(32, InGame.MakeStar_FromCenter);
             _title = new MenuOption(Height * 3 / 20, "А С Т Е Р О И Д Ы", new Font(FontFamily.GenericSansSerif, 24, FontStyle.Bold), Buffer.Graphics, delegate () { });
             _menu = SetMainMenu();
@@ -49,35 +50,17 @@ namespace The_Game
 
         public override void SceneKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Up)
-            {
-                if (FocusedOption > 0) FocusedOption--;
-            }
-            if (e.KeyCode == Keys.Down)
-            {
-                if (FocusedOption < _menu.Count - 1) FocusedOption++;
-            }
-            if (e.KeyCode == Keys.Enter) _menu[FocusedOption].Push.Invoke();
+            if (e.KeyCode == Keys.Up && FocusedOption > 0) FocusedOption--;
+            else if (e.KeyCode == Keys.Down && FocusedOption < _menu.Count - 1) FocusedOption++;
+            else if (e.KeyCode == Keys.Enter) _menu[FocusedOption].Push.Invoke();
         }
         #endregion
 
         #region НА СЦЕНЕ
         protected void OnTimerTick(object sender, EventArgs e)
         {
-            UpdateStars(InGame.MakeStar_FromCenter);
+            InGame.UpdateStars(ref _stars, InGame.MakeStar_FromCenter);
             Draw();
-        }
-
-        public static void UpdateStars(Func<Celestial> creationMethod)
-        {
-            for (int i = _stars.Count - 1; i >= 0; i--)
-            {
-                _stars[i].Update();
-                if (_stars[i].OutOfView() || _stars[i].StandsStill())
-                {
-                    _stars[i] = creationMethod.Invoke();
-                }
-            }
         }
 
         public override void Draw()
@@ -105,27 +88,16 @@ namespace The_Game
         protected List<MenuOption> SetMainMenu()
         {
             var res = new List<MenuOption>();
-            res.Add(new MenuOption(Height * 8 / 20, "Новая игра в аркадном режиме", new Font(FontFamily.GenericSansSerif, 15, FontStyle.Regular), Buffer.Graphics, LounchSingleMode));
-            res.Add(new MenuOption(Height * 11 / 20, "Новая игра в соревновательном режиме", new Font(FontFamily.GenericSansSerif, 15, FontStyle.Regular), Buffer.Graphics, LounchContestMode));
+            res.Add(new MenuOption(Height * 8 / 20, "Играть в аркадном режиме", new Font(FontFamily.GenericSansSerif, 15, FontStyle.Regular), Buffer.Graphics, LounchSingleMode));
+            res.Add(new MenuOption(Height * 11 / 20, "Играть в соревновательном режиме", new Font(FontFamily.GenericSansSerif, 15, FontStyle.Regular), Buffer.Graphics, LounchContestMode));
             res.Add(new MenuOption(Height * 14 / 20, "Выход", new Font(FontFamily.GenericSansSerif, 14, FontStyle.Regular), Buffer.Graphics, ExitApp));
             return res;
         }
         #endregion
 
         #region ДЕЙСТВИЯ
-        public void LounchSingleMode()
-        {
-            //TODO
-        }
-
-        public void LounchContestMode()
-        {
-            SceneManager
-                .Boot()                       // обновить SceneManager, сбросить управляемую сцену (возвращает SceneManager)
-                .PrepareScene<InGame>(_form)  // установить в обновленный SceneManager новую сцену (возвращает IScene)
-                .Draw();                      // отрисовать ее
-        }
-
+        public void LounchSingleMode() => SceneManager.Boot().PrepareScene<InGame>(new SceneArgs(_form, new ArcadeMode())).Draw();
+        public void LounchContestMode() => SceneManager.Boot().PrepareScene<InGame>(new SceneArgs(_form, new ContestMode())).Draw();
         public void ExitApp() => _form.Close();
         #endregion
     }

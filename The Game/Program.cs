@@ -33,9 +33,9 @@ namespace The_Game
             theForm.Show();
 
             SceneManager
-                .Boot()                       // обновить SceneManager, сбросить управляемую сцену (возвращает SceneManager)
-                .PrepareScene<Menu>(theForm)  // установить в обновленный SceneManager новую сцену (возвращает IScene)
-                .Draw();                      // отрисовать ее
+                .Boot()                                         // убедиться, что есть SceneManager (возвращает SceneManager)
+                .PrepareScene<Menu>(new SceneArgs(theForm))     // установить в SceneManager новую сцену (возвращает IScene)
+                .Draw();                                        // отрисовать ее
 
             Application.Run(theForm);
         }
