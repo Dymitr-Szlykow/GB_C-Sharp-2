@@ -18,9 +18,9 @@ namespace The_Game
         protected Bitmap image;
 
         public int NickOfTime { get; protected set; }
-        public Point Pos { get { return pos; } }
-        public Point Dir { get { return dir; } }
-        public Size Size { get { return size; } }
+        public Point Pos { get => pos; }
+        public Point Dir { get => dir; }
+        public Size Size { get => size; }
         #endregion
 
         #region СОЗДАНИЕ ЭКЗЕМПЛЯРОВ, КОНСТРУКТОРЫ

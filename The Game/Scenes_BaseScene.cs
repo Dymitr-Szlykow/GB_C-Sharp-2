@@ -13,6 +13,7 @@ namespace The_Game
         protected BufferedGraphicsContext _context;
         protected Form _form;
         public static BufferedGraphics Buffer;
+        public static Timer timer;
 
         public static int Width { get; set; }
         public static int Height { get; set; }
@@ -39,6 +40,7 @@ namespace The_Game
 
         public virtual void Dispose()
         {
+            timer?.Stop();
             _form.KeyDown -= SceneKeyDown;
             Buffer = null;
             _context = null;

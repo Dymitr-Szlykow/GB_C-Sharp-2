@@ -15,29 +15,46 @@ namespace The_Game
     {
         #region ПОЛЯ И СВОЙСТВА
         public static Random rand = new Random();
-        public static Timer timer; // = new Timer() { Interval = 60 };
 
         protected delegate void MainCycle();
         protected static MainCycle mainCycle;
 
-        //static Celestial[] _asteroids;
-        //static Celestial[] _comets;
-        //static Celestial[] _stars;
+        static PackedObjects _o;
         static List<Celestial> _asteroids;
         static List<Celestial> _comets;
         static List<Celestial> _kits;
         static List<Celestial> _missles;
         static List<Celestial> _stars;
-        //static Missle missle;
         static Missle missle_pl;
         static Planet planet;
         static Ship ship;
 
+        static PackedStatistics _stat;
         static int _countdown;
         static int score_overall;
         static int score_overall_pl;
         static int asteroidsDestroyed;
         static int cometsDestroyed;
+
+        class PackedObjects
+        {
+            static List<Celestial> asteroids;
+            static List<Celestial> comets;
+            static List<Celestial> kits;
+            static List<Celestial> missles;
+            static List<Celestial> stars;
+            static Missle missle_pl;
+            static Planet planet;
+            static Ship ship;
+        }
+
+        class PackedStatistics
+        {
+            static int score_overall;
+            static int score_overall_pl;
+            static int asteroidsDestroyed;
+            static int cometsDestroyed;
+        }
         #endregion
 
         #region ЗАПУСК ЯДРА
@@ -61,17 +78,6 @@ namespace The_Game
             timer.Start();
         }
 
-        //public static void SetWindow(Form form)  // ушло в base.Init() после добавления сцен (3 занятие) {
-        //    if (form.ClientSize.Width < 0 || 1000 < form.ClientSize.Width || form.ClientSize.Height < 0 || 1000 < form.ClientSize.Height)
-        //        throw new ArgumentOutOfRangeException();
-        //    _context = BufferedGraphicsManager.Current;
-        //    Graphics g = form.CreateGraphics();
-        //    Width = form.ClientSize.Width;
-        //    Height = form.ClientSize.Height;
-        //    Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
-        //    Buffer.Graphics.PageUnit = GraphicsUnit.Pixel;
-        //}
-
         public override void SceneKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Up) ship.MoveUp();
@@ -85,12 +91,6 @@ namespace The_Game
             }
             else if (e.KeyCode == Keys.Back) SceneManager.Boot().PrepareScene<Menu>(_form).Draw();
         }
-
-        public override void Dispose()
-        {
-            timer.Stop();
-            base.Dispose();
-        }
         #endregion
 
         #region ЯДРО: УПРАВЛЕНИЕ ЦИКЛОМ
@@ -99,7 +99,7 @@ namespace The_Game
             if (_countdown == 0)
             {
                 _kits.Add(MakeEngikit());
-                _countdown = rand.Next(50, 120);
+                _countdown = rand.Next(70, 150);
             }
             else
                 _countdown--;
@@ -170,7 +170,7 @@ namespace The_Game
 
         public static void CycleUpdate()
         {
-            UpdateStars();
+            UpdateStars(MakeStar_Scroller);
             planet.Update();
             ship.Update();
 
@@ -182,16 +182,14 @@ namespace The_Game
             if (planet.Pos.X < -planet.Size.Width / 2) planet.ReachesEdge();
         }
 
-        public static void UpdateStars()
+        public static void UpdateStars(Func<Celestial> creationMethod)
         {
             for (int i = _stars.Count - 1; i >= 0; i--)
             {
                 _stars[i].Update();
                 if (_stars[i].OutOfView() || _stars[i].StandsStill())
                 {
-                    _stars[i] = MakeStar_Scroller();
-                    //_stars.RemoveAt(i);
-                    //_stars.Add(MakeStar_Scroller());
+                    _stars[i] = creationMethod.Invoke();
                 }
             }
         }
@@ -354,60 +352,6 @@ namespace The_Game
             }
         }
 
-
-        //public static void UpdateAsteroids_questionable(Celestial[] objset, SystemSound sound)  // TODO, полна мусора
-        //{
-        //    for (int i = 0; i < _asteroids.Length; i++)
-        //    {
-        //        if (_asteroids[i] == null) continue;
-
-        //        _asteroids[i].Update();
-
-        //        if (missle != null && _asteroids[i].CollidesWith(missle))
-        //        {
-        //            sound.Play();
-        //            missle = null;
-        //            _asteroids[i] = MakeAsteroid_FromEdges();
-        //            asteroidsDestroyed++;
-        //            score_overall += _asteroids[i].ScoreCost;
-        //            continue;
-        //        }
-
-        //        if (missle_pl != null && _asteroids[i].CollidesWith(missle_pl))
-        //        {
-        //            sound.Play();
-        //            missle_pl = MakeMissle_FromPlanet();
-        //            _asteroids[i] = MakeAsteroid_FromEdges();
-        //            score_overall_pl += _asteroids[i].ScoreCost;
-        //            continue;
-        //        }
-
-        //        if (ship != null && _asteroids[i].CollidesWith(ship))
-        //        {
-        //            SystemSounds.Beep.Play(); //sound.Play();
-        //            // _asteroids[i].Bump(ship);
-        //            ship.Hit(rand.Next(1, 3));
-        //            if (ship.Energy < 0) ship.Dies();
-        //        }
-        //    }
-        //}
-
-        //public static void UpdateWithHit(Celestial[] objset, SystemSound sound, ref int count)
-        //{
-        //    foreach (var one in objset)
-        //    {
-        //        one.Update();
-        //        if (missle != null && one.CollidesWith(missle))
-        //        {
-        //            sound.Play();
-        //            one.Hit();
-        //            missle = null;
-        //            count++;
-        //            score_overall += one.ScoreCost;
-        //        }
-        //    }
-        //}
-
         public static void CheckAsteroidsOnCollisions()
         {
             for (int i = 0;  i < _asteroids.Count - 1;  i++)
@@ -456,7 +400,7 @@ namespace The_Game
 
         public static void CycleUpdate_endgame()
         {
-            UpdateStars();
+            UpdateStars(MakeStar_FromCenter);
         }
         #endregion
 
@@ -471,10 +415,6 @@ namespace The_Game
 
             missle_pl = MakeMissle_FromPlanet();
 
-            //LoadAsteroids(12);
-            //LoadStars(25);
-            //LoadComets(2);
-
             _asteroids = InitObjList(12, MakeAsteroid_Randomplace);
             _comets = InitObjList(2, MakeComet_Randomplace);
             _stars = InitObjList(25, MakeStar_FromCenter);
@@ -482,7 +422,7 @@ namespace The_Game
             _missles = new List<Celestial>();
         }
 
-        public delegate TResult MakeObj<TResult>();
+        //public delegate TResult MakeObj<TResult>();
 
         public static Celestial[] InitObjArray (int number, Func<Celestial> creationMethod)
         {
@@ -499,22 +439,6 @@ namespace The_Game
                 res.Add(creationMethod.Invoke());
             return res;
         }
-
-        //protected static void LoadAsteroids(int number) {
-        //    _asteroids = new Celestial[number];
-        //    for (int i = 0; i < _asteroids.Length; i++)
-        //        _asteroids[i] = MakeAsteroid_Randomplace();
-        //}
-        //protected static void LoadStars(int number) {
-        //    _stars = new Celestial[number];
-        //    for (int i = 0; i < _stars.Length; i++)
-        //        _stars[i] = MakeStar_FromCenter();
-        //}
-        //protected static void LoadComets(int number) {
-        //    _comets = new Celestial[number];
-        //    for (int i = 0; i < _comets.Length; i++)
-        //        _comets[i] = MakeComet_randomplace();
-        //}
         #endregion
 
         #region СОЗДАНИЕ ОБЪЕКТОВ В ИГРЕ, границы значений
