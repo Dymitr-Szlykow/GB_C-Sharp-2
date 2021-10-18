@@ -15,7 +15,6 @@ namespace The_Game
         public override int ScoreCost { get; }
         public override Rectangle Rect { get { return new Rectangle(pos.X + 4, pos.Y +4, size.Width - 4, size.Height - 4); } }
 
-
         public event EventHandler<DeathEventArgs> Death;
 
 
@@ -102,7 +101,11 @@ namespace The_Game
             }
         }
 
-        public void Dies() => Death?.Invoke(this, new DeathEventArgs(LastDamage, "Game over!", "корабль уничтожен"));
+        public void Replanish() => Energy = 100;
+
+        public void Dies() => Death?.Invoke(this, new DeathEventArgs(LastDamage, "Game over!", "корабль уничтожен"));  // действие, возбуждающее свое событие
+
+        public void OnNewLevel(object sender, EventArgs e) => Replanish();  // метод-реакция на внешнее событие (ArcadeMode.NewLevel)
         #endregion
     }
 }

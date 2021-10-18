@@ -53,13 +53,8 @@ namespace The_Game
             tail.Enqueue(new Tailpiece(pos, size));
         }
 
-        public override bool IsEmpty()
-        {
-            if (tail.Count == 0)
-                return true;
-            else
-                return false;
-        }
+        public override bool IsEmpty() => tail.Count == 0;
+        public override bool IsAlive() => Dir != Point.Empty;
 
 
         private class Tailpiece : Celestial

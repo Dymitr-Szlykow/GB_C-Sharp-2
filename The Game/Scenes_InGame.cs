@@ -13,9 +13,8 @@ namespace The_Game
     class InGame : BaseScene
     {
         #region ПОЛЯ И СВОЙСТВА
-        public static Random rand = new Random();
-
         protected static PackedObjects _coel;
+        protected static PackedParams _params;
         protected static PackedStatistics _stat;
         protected static int _countdown;
         private static InGame _mode;
@@ -30,6 +29,12 @@ namespace The_Game
             public Missle missle_pl;
             public Planet planet;
             public Ship ship;
+        }
+        public class PackedParams
+        {
+            public int asteroids;
+            public int comets;
+            public int stars;
         }
         public class PackedStatistics
         {
@@ -47,13 +52,15 @@ namespace The_Game
             base.Init(instructions);
             _mode = instructions._mode;
 
+            //rand = new Random();
+            timer = new Timer() { Interval = 60 };
+            timer.Tick += Cycle_OnTimerTick;
+
             _countdown = 0;
             _stat = new PackedStatistics();
+            _params = _mode.GetNumeralPack();
             _coel = _mode.PopulateIngameObjectsPack();
 
-            timer = new Timer();
-            timer.Interval = 60;
-            timer.Tick += Cycle_OnTimerTick;
             timer.Start();
         }
 
@@ -68,11 +75,7 @@ namespace The_Game
                 _coel.missles.Add(ShootMissle());
                 _coel.ship.Shot();
             }
-            else if (e.KeyCode == Keys.Back)
-            {
-                //Dispose();
-                SceneManager.Boot().PrepareScene<Menu>(new SceneArgs(_form)).Draw();
-            }
+            else if (e.KeyCode == Keys.Back) SceneManager.Boot().PrepareScene<Menu>(new SceneArgs(_form)).Draw();
         }
         #endregion
 
@@ -80,20 +83,13 @@ namespace The_Game
         public override void Draw() => _mode.Draw();
         public override void Update() => _mode.Update();
         public virtual PackedObjects PopulateIngameObjectsPack() => new PackedObjects();
+        public virtual PackedParams GetNumeralPack() => new PackedParams();
+
         protected static void Cycle_OnTimerTick(object sender, EventArgs e)
         {
-            if (_countdown == 0)
-            {
-                _coel.kits.Add(MakeEngikit());
-                _countdown = rand.Next(70, 150);
-            }
-            else
-                _countdown--;
-
-            _mode.Draw();
             _mode.Update();
+            _mode.Draw();
         }
-
 
         protected static void OnDeath(object sender, DeathEventArgs e)
         {
@@ -123,10 +119,7 @@ namespace The_Game
             Endgame();
         }
 
-        protected static void Endgame()
-        {
-            _mode = new Endgame();
-        }
+        protected static void Endgame() => _mode = new Endgame();
         #endregion
 
         #region главный цикл: ДЕТАЛИ ОБНОВЛЕНИЯ  -- TODO
@@ -155,15 +148,6 @@ namespace The_Game
 
         public static void UpdateMissles()
         {
-            if (_coel.missle_pl != null)
-            {
-                _coel.missle_pl.Update();
-                if (_coel.missle_pl.OutOfView() || _coel.missle_pl.StandsStill())
-                    _coel.missle_pl = null;
-            }
-            else
-                _coel.missle_pl = MakeMissle_FromPlanet(_coel.planet);
-
             for (int i = _coel.missles.Count - 1; i >= 0; i--)
             {
                 _coel.missles[i].Update();
@@ -174,129 +158,16 @@ namespace The_Game
             }
         }
 
-        /// <summary>
-        /// Огромный неловкий метод, выполняющий обновление астероидов и комет и проверки на их столкновения
-        /// </summary>
-        public static void UpdateTargets()
+        public static void UpdateMissle_pl()
         {
-            for (int i = _coel.asteroids.Count - 1; i >= 0; i--)
+            if (_coel.missle_pl != null)
             {
-                // о б н о в и т ь
-                _coel.asteroids[i].Update();
-
-                // с б и т  и г р о к о м ?
-                bool IsShot = false;
-                for (int j = _coel.missles.Count - 1; j >= 0; j--)
-                {
-                    if (_coel.asteroids[i].CollidesWith(_coel.missles[j]))
-                    {
-                        SystemSounds.Hand.Play();
-                        IsShot = true;
-                        _stat.asteroidsDestroyed++;
-                        _stat.score_overall += _coel.asteroids[i].ScoreCost;
-                        _coel.asteroids[i] = MakeAsteroid_FromEdges();
-                        _coel.missles.RemoveAt(j);
-                        break;
-                    }
-                }
-                if (IsShot) continue;
-
-                // с б и т  с  п л а н е т ы ?
-                if (_coel.missle_pl != null && _coel.asteroids[i].CollidesWith(_coel.missle_pl))
-                {
-                    SystemSounds.Hand.Play();
-                    _stat.score_overall_pl += _coel.asteroids[i].ScoreCost;
-                    _coel.asteroids[i] = MakeAsteroid_FromEdges();
+                _coel.missle_pl.Update();
+                if (_coel.missle_pl.OutOfView() || _coel.missle_pl.StandsStill())
                     _coel.missle_pl = null;
-                    continue;
-                }
-
-                // с т о л к н у л с я  с  к о р а б л е м ?
-                if (_coel.asteroids[i].CollidesWith(_coel.ship))
-                {
-                    SystemSounds.Beep.Play();
-                    // _coel.asteroids[i].Bump(ship);
-                    _coel.ship.Hit(rand.Next(1, 3));
-                    if (_coel.ship.Energy < 0) _coel.ship.Dies();
-                    _coel.asteroids[i] = MakeAsteroid_FromEdges();
-                }
-
-                // с т о л к н у л с я  с  д р у г и м  а с т е р о и д о м ?
-                for (int j = _coel.asteroids.Count - 1; j > i; j--)
-                {
-                    if (_coel.asteroids[i].CollidesWith(_coel.asteroids[j]))
-                    {
-                        //TODO
-                    }
-                }
             }
-            while (_coel.asteroids.Count < 12) _coel.asteroids.Add(MakeAsteroid_FromEdges());
-
-            for (int i = 0; i < _coel.comets.Count; i++)
-            {
-                // о б н о в и т ь
-                _coel.comets[i].Update();
-                if (_coel.comets[i].IsEmpty())
-                {
-                    _coel.comets.RemoveAt(i);
-                    continue;
-                }
-
-                // с б и т а  и г р о к о м ?
-                bool IsShot = false;
-                for (int j = _coel.missles.Count - 1; j >= 0; j--)
-                {
-                    if (_coel.comets[i].CollidesWith(_coel.missles[j]))
-                    {
-                        SystemSounds.Exclamation.Play();
-                        IsShot = true;
-                        _stat.cometsDestroyed++;
-                        _stat.score_overall += _coel.comets[i].ScoreCost;
-                        _coel.comets[i].Hit();
-                        _coel.missles.RemoveAt(j);
-                        break;
-                    }
-                }
-                if (IsShot) continue;
-
-                // с б и т а  с  п л а н е т ы ?
-                if (_coel.missle_pl != null && _coel.comets[i].CollidesWith(_coel.missle_pl))
-                {
-                    SystemSounds.Hand.Play();
-                    _stat.score_overall_pl += _coel.comets[i].ScoreCost;
-                    _coel.comets[i].Hit();
-                    _coel.missle_pl = null;
-                    continue;
-                }
-
-                // с т о л к н у л а с ь  с  к о р а б л е м ?
-                if (_coel.comets[i].CollidesWith(_coel.ship))
-                {
-                    SystemSounds.Beep.Play();
-                    if (_coel.comets[i].Dir != Point.Empty) _coel.ship.Hit(rand.Next(5, 10));
-                    if (_coel.ship.Energy < 0) _coel.ship.Dies();
-                    _coel.comets[i].Hit();
-                }
-
-                // с т о л к н у л а с ь  с  д р у г о й  к о м е т о й ?
-                for (int j = _coel.comets.Count - 1; j > i; j--)
-                {
-                    if (_coel.comets[i].CollidesWith(_coel.asteroids[j]))
-                    {
-                        // TODO
-                    }
-                }
-
-                // с т о л к н у л а с ь  с  а с т е р о и д о м ?
-                for (int j = 0; j < _coel.asteroids.Count; j++)
-                {
-                    if (_coel.comets[i].CollidesWith(_coel.asteroids[j]))
-                    {
-                        // TODO
-                    }
-                }
-            }
-            while (_coel.comets.Count < 2) _coel.comets.Add(MakeComet_FromEdges());
+            else
+                _coel.missle_pl = MakeMissle_FromPlanet(_coel.planet);
         }
 
         public static void CheckKits()
@@ -311,20 +182,16 @@ namespace The_Game
             }
         }
 
-        public static void CheckAsteroidsOnCollisions()
-        {
-            for (int i = 0; i < _coel.asteroids.Count - 1; i++)
-            {
-                for (int j = i + 1; j < _coel.asteroids.Count; j++)
-                {
-                    if (_coel.asteroids[i].CollidesWith(_coel.asteroids[j]))
-                    {
-                        //System.Media.SystemSounds.Hand.Play(); // не при данном применении звука // TODO
-                        _coel.asteroids[i].Bump(_coel.asteroids[j]);
-                    }
-                }
-            }
-        }
+        //public static void CheckAsteroidsOnCollisions() {
+        //    for (int i = 0; i < _coel.asteroids.Count - 1; i++) {
+        //        for (int j = i + 1; j < _coel.asteroids.Count; j++) {
+        //            if (_coel.asteroids[i].CollidesWith(_coel.asteroids[j])) {
+        //                //System.Media.SystemSounds.Hand.Play(); // не при данном применении звука // TODO
+        //                //_coel.asteroids[i].Bump(_coel.asteroids[j]);
+        //            }
+        //        }
+        //    }
+        //}
         #endregion
 
         #region СТАТИЧЕСКИЙ ИНСТРУМЕНТ ДЛЯ СОЗДАНИЯ ОБЪЕКТОВ В ИГРЕ, границы значений

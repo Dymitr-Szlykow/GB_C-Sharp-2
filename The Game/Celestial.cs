@@ -129,7 +129,7 @@ namespace The_Game
             pos.Y += dir.Y;
         }
 
-        protected void Ricochet() //(Size hostWindow)
+        protected void Ricochet() // (Size hostWindow) ?
         {
             if ((pos.X < 0 && dir.X < 0) || (pos.X > InGame.Width - size.Width && dir.X > 0))
                 dir.X = -dir.X;
@@ -137,9 +137,38 @@ namespace The_Game
                 dir.Y = -dir.Y;
         }
 
-        public void Bump(ICollision other)
+        /// <summary>
+        /// тангенс наклона к горизонтали:      k1  =   y / x   =    (y2 - y1) / (x2 - x1)
+        /// тангенс перпендикулярной линии:     k2  =  -1 / k1  =  -((x2 - x1) / (y2 - y1))
+        /// поворот вектора на 90° по часовой:  (x1 - x2) / (y2 - y1)
+        /// поворот вектора на 90° против:      (x2 - x1) / (y1 - y2)
+        /// ! вдоль осей неопределено
+        /// </summary>
+        /// <param name="one"></param>
+        /// <param name="another"></param>
+        /// <returns>Вектор вдоль прямой, перпендикулярной к линии, соединяющей взятые объекты. При этом вектор направлен в I или II четверть.</returns>
+        public static Point GetPerpendicular(Celestial one, Celestial another)
         {
-            // TODO
+            if (one.Pos.X == another.Pos.X)
+                return new Point(0, 1);
+            else if (one.Pos.Y == another.Pos.Y)
+                return new Point(1, 0);
+            else if(one.Pos.X < another.Pos.X)
+                return new Point(another.Pos.X - one.Pos.X, one.Pos.Y - another.Pos.Y);
+            else
+                return new Point(one.Pos.X - another.Pos.X, another.Pos.Y - one.Pos.Y);
+        }
+
+        internal void Bump(Point vect)
+        {
+            if (vect.X == 0)
+                dir.X = -dir.X;
+            else if (vect.Y == 0)
+                dir.Y = -dir.Y;
+            else
+            {
+                // неверный подход
+            }
         }
 
         protected void Reduce(int reduction)
@@ -150,30 +179,11 @@ namespace The_Game
         #endregion
 
         #region ПРОВЕРКИ
+        public virtual bool IsAlive() => throw new NotImplementedException();
         public virtual bool IsEmpty() => throw new NotImplementedException();
-        public bool OutOfView()
-        {
-            if (pos.X < -size.Width || pos.X > InGame.Width || pos.Y < -size.Height || pos.Y > InGame.Height)
-                return true;
-            else
-                return false;
-        }
-
-        public bool StandsStill()
-        {
-            if (dir.X == 0 && dir.Y == 0)
-                return true;
-            else
-                return false;
-        }
-
-        public bool SmallerThan(int cap)
-        {
-            if (size.Width < cap || size.Height < cap)
-                return true;
-            else
-                return false;
-        }
+        public virtual bool OutOfView() => (pos.X < -size.Width || pos.X > InGame.Width || pos.Y < -size.Height || pos.Y > InGame.Height);
+        public virtual bool StandsStill() => dir.X == 0 && dir.Y == 0;
+        public virtual bool SmallerThan(int cap) => (size.Width < cap || size.Height < cap);
         #endregion
     }
 }

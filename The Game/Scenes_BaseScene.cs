@@ -14,6 +14,7 @@ namespace The_Game
         protected Form _form;
         public static BufferedGraphics Buffer;
         public static Timer timer;
+        public static Random rand = new Random();
 
         public static int Width { get; set; }
         public static int Height { get; set; }
@@ -36,7 +37,6 @@ namespace The_Game
         }
 
         public virtual void SceneKeyDown(object sender, KeyEventArgs e) { }
-
         public virtual void Draw() { }
         public virtual void Update() { }
 

@@ -42,8 +42,7 @@ namespace The_Game
             _menu = SetMainMenu();
             focus = 0;
 
-            timer = new Timer();
-            timer.Interval = 60;
+            timer = new Timer() { Interval = 60 };
             timer.Tick += OnTimerTick;
             timer.Start();
         }
