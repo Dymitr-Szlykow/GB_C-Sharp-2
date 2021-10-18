@@ -60,7 +60,11 @@
     <Compile Include="Celestial_Ship.cs" />
     <Compile Include="Celestial_star.cs" />
     <Compile Include="Scenes_BaseScene.cs" />
+    <Compile Include="Scenes_InGame_ArcadeMode.cs" />
+    <Compile Include="Scenes_InGame_ContestMode.cs" />
+    <Compile Include="Scenes_InGame_Endgame.cs" />
     <Compile Include="Scenes_Menu.cs" />
+    <Compile Include="Scenes_Menu_Option.cs" />
     <Compile Include="Scenes_SceneManager.cs" />
     <Compile Include="Scenes_InGame.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

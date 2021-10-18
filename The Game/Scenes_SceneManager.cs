@@ -14,15 +14,16 @@ namespace The_Game
 
         public static SceneManager Boot()
         {
+            // _sceneManager ??= new SceneManager(); // C# 8.0+
             if (_sceneManager == null) _sceneManager = new SceneManager();
             return _sceneManager;
         }
 
-        public IScene PrepareScene<T>(Form form) where T : BaseScene, new()
+    public IScene PrepareScene<T>(SceneArgs instructions) where T : BaseScene, new()
         {
-            if (_scene != null) _scene.Dispose();
+            _scene?.Dispose();
             _scene = new T();
-            _scene.Init(form);
+            _scene.Init(instructions);
             return _scene;
         }
     }

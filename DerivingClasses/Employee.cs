@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DerivingClasses
+namespace Adendum.DerivingClasses
 {
     abstract class Employee : IComparable<Employee>
     {

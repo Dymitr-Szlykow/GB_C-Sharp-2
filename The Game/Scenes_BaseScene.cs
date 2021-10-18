@@ -13,17 +13,20 @@ namespace The_Game
         protected BufferedGraphicsContext _context;
         protected Form _form;
         public static BufferedGraphics Buffer;
+        public static Timer timer;
+        public static Random rand = new Random();
 
         public static int Width { get; set; }
         public static int Height { get; set; }
 
-        public virtual void Init(Form form)
+        public virtual void Init(SceneArgs instructions)
         {
-            if (form.ClientSize.Width < 0 || 1000 < form.ClientSize.Width || form.ClientSize.Height < 0 || 1000 < form.ClientSize.Height)
+            if (instructions._form.ClientSize.Width < 0 || 1000 < instructions._form.ClientSize.Width ||
+                instructions._form.ClientSize.Height < 0 || 1000 < instructions._form.ClientSize.Height)
             {
                 throw new ArgumentOutOfRangeException();
             }
-            _form = form;
+            _form = instructions._form;
             Graphics g = _form.CreateGraphics();
             Width = _form.ClientSize.Width;
             Height = _form.ClientSize.Height;
@@ -34,20 +37,32 @@ namespace The_Game
         }
 
         public virtual void SceneKeyDown(object sender, KeyEventArgs e) { }
-
         public virtual void Draw() { }
+        public virtual void Update() { }
 
         public virtual void Dispose()
         {
+            timer?.Stop();
             _form.KeyDown -= SceneKeyDown;
             Buffer = null;
             _context = null;
         }
     }
 
+
+    public class SceneArgs
+    {
+        internal Form _form;
+        internal InGame _mode;
+
+        internal SceneArgs(Form form) => _form = form;
+        internal SceneArgs(Form form, InGame mode) : this(form) => _mode = mode;
+    }
+
+
     public interface IScene
     {
-        void Init(Form form);
+        void Init(SceneArgs e);
         void Draw();
     }
 }
