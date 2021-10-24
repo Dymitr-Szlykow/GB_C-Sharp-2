@@ -1,4 +1,4 @@
-﻿<Window x:Class="CompanyApp.EntryEditor"
+﻿<Window x:Class="CompanyApp.EditorForDepartment"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
         Title="EntryEditor" Height="396.562" Width="388.437">
     <Grid>
 
-        <Controls:CrewControl x:Name="EntryControl" Margin="10,10,10,48"/>
+        <Controls:DepartmentDetailsControl x:Name="EntryControl" Margin="10,10,10,48"/>
         <Button x:Name="btnOk" Content="ОК" Margin="0,0,90,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="btnOk_Click"/>
         <Button x:Name="btnCancel" Content="Отмена" Margin="0,0,10,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="btnCancel_Click"/>
 

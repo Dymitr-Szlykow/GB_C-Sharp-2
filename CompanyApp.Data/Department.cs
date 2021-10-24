@@ -12,7 +12,7 @@ namespace CompanyApp.Data
     {
         protected string _title;
         protected string _location;
-        protected Employee _manager;  // в БД предполагается вторичный ключ
+        protected Employee _manager;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

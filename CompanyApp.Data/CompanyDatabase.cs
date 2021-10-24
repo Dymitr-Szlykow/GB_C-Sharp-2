@@ -70,7 +70,7 @@ namespace CompanyApp
             var res = new ObservableCollection<Employee>();
 
             string name, surname, patronym, department;
-            char gender;
+            GenderType gender;
             int salary;
 
             for (int i = 0; i < contactCount; i++)
@@ -79,7 +79,7 @@ namespace CompanyApp
                 name = GenerateSymbols(random.Next(6) + 5);
                 surname = GenerateSymbols(random.Next(6) + 5);
                 patronym = GenerateSymbols(random.Next(6) + 5);
-                gender = random.Next(2) == 0 ? 'м' : 'ж';
+                gender = random.Next(2) == 0 ? GenderType.Male : GenderType.Female;
                 salary = random.Next(20, 85) * 1000;
                 department = Departments[random.Next(Departments.Count)].Title;
 

@@ -1,5 +1,4 @@
-﻿using CompanyApp;
-using CompanyApp.Data;
+﻿using CompanyApp.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,26 +19,16 @@ using System.Windows.Shapes;
 
 namespace CompanyApp.Controls
 {
-    public partial class CrewControl : UserControl, INotifyPropertyChanged
+    public partial class DepartmentDetailsControl : UserControl, INotifyPropertyChanged
     {
-        private Employee _employeeDetailed;
-        private ObservableCollection<string> _deparmentList;
+        private Department _departmentDetailed;
 
-        public Employee EmployeeDetailed
+        public Department DepartmentDetailed
         {
-            get => _employeeDetailed;
+            get => _departmentDetailed;
             set
             {
-                _employeeDetailed = value;
-                NotifyPropertyChanged();
-            }
-        }
-        public ObservableCollection<string> DeparmentList
-        {
-            get => _deparmentList;
-            set
-            {
-                _deparmentList = value;
+                _departmentDetailed = value;
                 NotifyPropertyChanged();
             }
         }
@@ -52,10 +41,14 @@ namespace CompanyApp.Controls
         }
 
 
-        public CrewControl()
+        public DepartmentDetailsControl()
         {
             InitializeComponent();
             DataContext = this;
+            //CategoryList.Add(ContactCategory.General);
+            //CategoryList.Add(ContactCategory.Personal);
+            //CategoryList.Add(ContactCategory.Working);
+            //cbCategory.ItemsSource = Enum.GetValues(typeof(ContactCategory)).Cast<ContactCategory>();
         }
     }
 }

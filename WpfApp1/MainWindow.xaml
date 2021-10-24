@@ -6,35 +6,76 @@
         xmlns:local="clr-namespace:CompanyApp"
         xmlns:Controls="clr-namespace:CompanyApp.Controls;assembly=CompanyApp.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="510.0" Width="750.0">
+        Title="MainWindow" Height="553.35" Width="769.737" MinHeight="425.0" MinWidth="700.0">
     <Grid>
-        <ListView x:Name="DataListView"
+        <ComboBox x:Name="ChooseSchema" ItemsSource="{Binding ChoosenSchema.Schemas}" Text="{Binding ChoosenSchema.ShowSchema}" Margin="10,10,350,0" Height="22" VerticalAlignment="Top"/>
+        
+        <Canvas x:Name="TableCanvas" Margin="10,35,350,10">
+            <ListView x:Name="CrewListView"
                   ItemsSource="{Binding Crew}"
                   SelectedItem="{Binding SelectedEmployee}"
                   SelectionMode="Single"
-                  Margin="10,10,350,10" SelectionChanged="phonebookListView_SelectionChanged">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="100"
+                  MaxHeight="{Binding ElementName=TableCanvas, Path=ActualHeight}" Width="{Binding ElementName=TableCanvas, Path=ActualWidth}"
+                  SelectionChanged="OnEmployeeSelectionChanged"
+                  Canvas.ZIndex="1" Background="White"
+                  Visibility="{Binding ChoosenSchema.StateAVisibility}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="100"
                                     Header="Отделение"
                                     DisplayMemberBinding="{Binding Department}"/>
-                    <GridViewColumn Width="auto"
+                        <GridViewColumn Width="auto"
                                     Header="Ф.И.О."
                                     DisplayMemberBinding="{Binding ShortName}"/>
-                    <GridViewColumn Width="auto"
+                        <GridViewColumn Width="auto"
                                     Header="Пол"
-                                    DisplayMemberBinding="{Binding Gender}"/>
-                    <GridViewColumn Width="auto"
+                                    DisplayMemberBinding="{Binding GenderAsChar}"/>
+                        <GridViewColumn Width="auto"
                                     Header="Жалование"
                                     DisplayMemberBinding="{Binding Salary}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
-        <Controls:CrewControl x:Name="CrewControl" HorizontalAlignment="Right" Margin="0,12,10,143" Width="335"/>
-        <Button x:Name="btnApply" Content="Править" Margin="0,0,10,115" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="btnApply_Click"/>
-        <Button x:Name="btnRemove" Content="Удалить" Margin="0,0,270,115" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" Click="btnRemove_Click"/>
-        <Button x:Name="btnAdd" Content="Добавить" Margin="0,0,138,115" Click="btnAdd_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+            <ListView x:Name="DepartmentsListView"
+                  ItemsSource="{Binding Departments}"
+                  SelectedItem="{Binding SelectedDepartment}"
+                  SelectionMode="Single"
+                  MaxHeight="{Binding ElementName=TableCanvas, Path=ActualHeight}" Width="{Binding ElementName=TableCanvas, Path=ActualWidth}"
+                  SelectionChanged="OnDepartmentSelectionChanged"
+                  Canvas.ZIndex="1" Background="White"
+                  Visibility="{Binding ChoosenSchema.StateBVisibility}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="100"
+                                    Header="Название"
+                                    DisplayMemberBinding="{Binding Title}"/>
+                        <GridViewColumn Width="auto"
+                                    Header="Местоположение"
+                                    DisplayMemberBinding="{Binding Location}"/>
+                        <GridViewColumn Width="auto"
+                                    Header="Заведующий"
+                                    DisplayMemberBinding="{Binding Manager.ShortName}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Canvas>
+
+        <Canvas x:Name="DetailsCanvas" Margin="0,10,0,0" HorizontalAlignment="Right" Width="345" Height="336" VerticalAlignment="Top">
+            <!--<UserControl x:Name="DetailsCanvasChild" Margin="0,10,10,0" Width="335" Height="326"/>-->
+            <Controls:CrewControl x:Name="EmployeeDetails"
+                                  Width="{Binding ElementName=DetailsCanvas, Path=ActualWidth}" Height="{Binding ElementName=DetailsCanvas, Path=ActualHeight}"
+                                  Canvas.ZIndex="1" Background="White"
+                                  Visibility="{Binding ChoosenSchema.StateAVisibility}"/>
+            <Controls:DepartmentDetailsControl x:Name="DepartmentDetails"
+                                  Width="{Binding ElementName=DetailsCanvas, Path=ActualWidth}" Height="{Binding ElementName=DetailsCanvas, Path=ActualHeight}"
+                                  Canvas.ZIndex="1" Background="White"
+                                  Visibility="{Binding ChoosenSchema.StateBVisibility}"/>
+        </Canvas>
+
+        <Button x:Name="btnApply"  Content="Править"  Margin="0,352,10,0"  HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Top" Click="btnApply_Click"/>
+        <Button x:Name="btnRemove" Content="Удалить"  Margin="0,352,270,0" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Top" Click="btnRemove_Click"/>
+        <Button x:Name="btnAdd"    Content="Добавить" Margin="0,352,138,0" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Top" Click="btnAdd_Click"/>
 
     </Grid>
 </Window>

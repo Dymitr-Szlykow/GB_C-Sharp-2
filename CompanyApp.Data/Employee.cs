@@ -14,7 +14,7 @@ namespace CompanyApp.Data
         protected string _surname;
         protected string _patronym;
         protected string _birthDate;
-        protected char _gender;
+        protected GenderType _gender;
         protected int _salary;
         protected string _department;
 
@@ -61,32 +61,38 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
-        public char Gender
+        public GenderType Gender
         {
             get => _gender;
             set
             {
-                if (value == 'м' || value == 'ж')
-                    _gender = value;
-                else
-                    _gender = ' ';
+                _gender = value;
                 NotifyPropertyChanged();
+            }
+        }
+        public char GenderAsChar
+        {
+            get => _gender == GenderType.Male ? 'М' : 'Ж';
+            set
+            {
+                if (value == 'м' || value == 'М') _gender = GenderType.Male;
+                else if (value == 'ж' || value == 'Ж') _gender = GenderType.Female;
             }
         }
         public bool IsMale
         {
-            get => _gender == 'м';
+            get => _gender == GenderType.Male;
             set
             {
-                if (value) Gender = 'м';
+                if (value) _gender = GenderType.Male;
             }
         }
         public bool IsFemale
         {
-            get => _gender == 'ж';
+            get => _gender == GenderType.Female;
             set
             {
-                if (value) Gender = 'ж';
+                if (value) Gender = GenderType.Female;
             }
         }
         public int Salary
@@ -110,15 +116,17 @@ namespace CompanyApp.Data
         public string FullName
         {
             get => $"{_name} {_patronym} {_surname}";
+            set { }
         }
         public string ShortName
         {
             get => $"{_name[0]}.{_patronym[0]}. {_surname}";
+            set { }
         }
         #endregion
 
         public Employee() { }
-        public Employee(string name, string surname, string patronym, string birthdate, char gender, int salary, string department)
+        public Employee(string name, string surname, string patronym, string birthdate, GenderType gender, int salary, string department)
         {
             Name = name;
             Surname = surname;
@@ -131,4 +139,6 @@ namespace CompanyApp.Data
 
         public object Clone() => this.MemberwiseClone();
     }
+
+    public enum GenderType { Male, Female }
 }
