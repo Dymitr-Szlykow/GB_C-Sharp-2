@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Media;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,11 +77,16 @@ namespace CompanyApp
             if (ChoosenSchema.ShowSchema == PresentSchema.Employees)
             {
                 if (CrewListView.SelectedItems.Count < 1) return;
-                Crew[Crew.IndexOf(SelectedEmployee)] = EmployeeDetails.EmployeeDetailed;
+                else if (CompanyDB.UpdateInSQL(EmployeeDetails.EmployeeDetailed) > 0)
+                {
+                    Crew[Crew.IndexOf(SelectedEmployee)] = EmployeeDetails.EmployeeDetailed;
+                    SystemSounds.Beep.Play();
+                }
             }
             else if (ChoosenSchema.ShowSchema == PresentSchema.Departments)
             {
                 if (DepartmentsListView.SelectedItems.Count < 1) return;
+                else if (CompanyDB.UpdateInSQL(EmployeeDetails.EmployeeDetailed) > 0)
                 {
                     foreach (var one in Crew)
                     {
@@ -100,26 +106,37 @@ namespace CompanyApp
             if (ChoosenSchema.ShowSchema == PresentSchema.Employees)
             {
                 if (SelectedEmployee == null) return;
-                if (MessageBox.Show("Вы действительно желаете удалить запись о сотруднике?", "Удаление записи", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                else if (MessageBox.Show("Вы действительно желаете удалить запись о сотруднике?", "Удаление записи", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    _ = CompanyDB.Crew.Remove(SelectedEmployee);
-                    EmployeeDetails.EmployeeDetailed = null;
-                    //SelectedEmployee = null;
+                    if (CompanyDB.RemoveInSQL(SelectedEmployee) > 0)
+                    {
+                        _ = CompanyDB.Crew.Remove(SelectedEmployee);
+                        EmployeeDetails.EmployeeDetailed = null;
+                    }
                 }
             }
             else if (ChoosenSchema.ShowSchema == PresentSchema.Departments)
             {
                 if (SelectedDepartment == null) return;
-                if (MessageBox.Show("Внимание! Будут удалены все записи, связанные с данным отделением.\nПродолжить?", "Каскадное удаление записей", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                else if (MessageBox.Show("Внимание! Будут удалены все записи, связанные с данным отделением.\nПродолжить?", "Каскадное удаление записей", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-                    for (int i = Crew.Count - 1; i >= 0; i--)
+                    int lines = CompanyDB.RemoveInSQL(SelectedDepartment);
+                    if (lines > 0)
                     {
-                        if (Crew[i].Department == SelectedDepartment.Title) Crew.RemoveAt(i);
+                        for (int i = Crew.Count - 1; i >= 0; i--)
+                        {
+                            if (Crew[i].Department == SelectedDepartment.Title)
+                            {
+                                CompanyDB.RemoveInSQL(Crew[i]);
+                                Crew.RemoveAt(i);
+                                lines--;
+                            }
+                        }
+                        _ = _deparmentList.Remove(SelectedDepartment.Title);
+                        _ = CompanyDB.Departments.Remove(SelectedDepartment);
+                        DepartmentDetails.DepartmentDetailed = null;
+                        if (lines > 1) MessageBox.Show("Необходимо проверить СУБД! Количество затронутых строк не сходится!", "Вместо исключения", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
-                    _ = _deparmentList.Remove(SelectedDepartment.Title);
-                    _ = CompanyDB.Departments.Remove(SelectedDepartment);
-                    DepartmentDetails.DepartmentDetailed = null;
-                    //SelectedDepartment = null;
                 }
             }
             else return;
@@ -134,7 +151,9 @@ namespace CompanyApp
                 editorWindow.EntryControl.DeparmentList = EmployeeDetails.DeparmentList;
                 if (editorWindow.ShowDialog() == true)
                 {
-                    CompanyDB.Crew.Add(editorWindow.NewEmployee);
+                    editorWindow.NewEmployee.ID = CompanyDB.NextCrewID++;
+                    if (CompanyDB.InsertInSQL(editorWindow.NewEmployee) > 0)
+                        CompanyDB.Crew.Add(editorWindow.NewEmployee);
                 }
             }
             else if (ChoosenSchema.ShowSchema == PresentSchema.Departments)
@@ -142,8 +161,12 @@ namespace CompanyApp
                 var editorWindow = new EditorForDepartment();
                 if (editorWindow.ShowDialog() == true)
                 {
-                    CompanyDB.Departments.Add(editorWindow.NewDepartment);
-                    _deparmentList.Add(editorWindow.NewDepartment.Title);
+                    editorWindow.NewDepartment.ID = CompanyDB.NextDepartmentID++;
+                    if (CompanyDB.InsertInSQL(editorWindow.NewDepartment) > 0)
+                    {
+                        CompanyDB.Departments.Add(editorWindow.NewDepartment);
+                        _deparmentList.Add(editorWindow.NewDepartment.Title);
+                    }
                 }
             }
             else return;

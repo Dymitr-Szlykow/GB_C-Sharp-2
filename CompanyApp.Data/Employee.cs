@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CompanyApp.Data
 {
-    public class Employee : INotifyPropertyChanged, ICloneable
+    public class Employee : IDatabaseEntity, INotifyPropertyChanged, ICloneable
     {
         protected string _name;
         protected string _surname;
@@ -27,7 +27,11 @@ namespace CompanyApp.Data
         #region СВОЙСТВА
         public string Name
         {
-            get => _name;
+            get
+            {
+                if (_name.Length == 0) return "John";
+                else return _name;
+            }
             set
             {
                 _name = value;
@@ -36,7 +40,11 @@ namespace CompanyApp.Data
         }
         public string Surname
         {
-            get => _surname;
+            get
+            {
+                if (_surname.Length == 0) return "Doe";
+                else return _surname;
+            }
             set
             {
                 _surname = value;
@@ -45,7 +53,11 @@ namespace CompanyApp.Data
         }
         public string Patronym
         {
-            get => _patronym;
+            get
+            {
+                if (_patronym.Length == 0) return " ";
+                else return _patronym;
+            }
             set
             {
                 _patronym = value;
@@ -115,19 +127,23 @@ namespace CompanyApp.Data
         }
         public string FullName
         {
-            get => $"{_name} {_patronym} {_surname}";
+            get => $"{Name} {Patronym} {Surname}";
             set { }
         }
         public string ShortName
         {
-            get => $"{_name[0]}.{_patronym[0]}. {_surname}";
+            get => $"{Name[0]}.{Patronym[0]}. {Surname}";
             set { }
         }
+
+        public int ID { get; set; }
+        public string Tablename { get => "Employees"; }
         #endregion
 
         public Employee() { }
-        public Employee(string name, string surname, string patronym, string birthdate, GenderType gender, int salary, string department)
+        public Employee(int id, string name, string surname, string patronym, string birthdate, GenderType gender, int salary, string department)
         {
+            ID = id;
             Name = name;
             Surname = surname;
             Patronym = patronym;
