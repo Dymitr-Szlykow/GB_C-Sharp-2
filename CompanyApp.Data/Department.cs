@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CompanyApp.Data
 {
-    public class Department : INotifyPropertyChanged, ICloneable, IEqualityComparer<Department>
+    public class Department : INotifyPropertyChanged, ICloneable, IEqualityComparer<Department>, IDatabaseEntity
     {
         protected string _title;
         protected string _location;
@@ -48,11 +48,15 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
+
+        public int ID { get; set; }
+        public string Tablename { get => "Departments"; }
         #endregion
 
         public Department() { }
-        public Department(string title, string location)
+        public Department(int id, string title, string location)
         {
+            ID = id;
             Title = title;
             Location = location;
         }
