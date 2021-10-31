@@ -20,7 +20,7 @@ namespace CompanyApp.Data
             return temp;
         }
 
-        public static ObservableCollection<T> FinishQuery<T>(this (SqlConnection, ObservableCollection<T>) bundle) where T : IDatabaseEntity
+        public static ObservableCollection<T> FinishQuery<T>(this (SqlConnection, ObservableCollection<T>) bundle) where T : DatabaseEntity
         {
             bundle.Item1.Dispose();
             return bundle.Item2;
@@ -180,7 +180,7 @@ namespace CompanyApp.Data
 
 
         #region DATA MANIPULATION: DELETE clause
-        public static (SqlConnection, SqlCommand) CommandRemove<T>(this SqlConnection connection, T entry) where T : IDatabaseEntity
+        public static (SqlConnection, SqlCommand) CommandRemove<T>(this SqlConnection connection, T entry) where T : DatabaseEntity
         {
             string statement = $@"DELETE FROM {entry.Tablename} WHERE id = {entry.ID};";
             return (connection, new SqlCommand(statement, connection));

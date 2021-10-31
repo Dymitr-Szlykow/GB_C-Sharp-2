@@ -37,6 +37,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceModel">
+      <Aliases>neutral</Aliases>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -71,6 +74,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CompanyDatabase.cs" />
     <Compile Include="EditorForDepartment.xaml.cs">
       <DependentUpon>EditorForDepartment.xaml</DependentUpon>
     </Compile>
@@ -111,9 +115,9 @@
       <Project>{d734eeac-1510-4e47-9664-bb38a7e70e8c}</Project>
       <Name>CompanyApp.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CompanyApp.Data\CompanyApp.Data.csproj">
-      <Project>{76422670-5ad3-421b-ad6b-71c8640b5c2e}</Project>
-      <Name>CompanyApp.Data</Name>
+    <ProjectReference Include="..\CompanyApp.ServiceCommunication\CompanyApp.ServiceCommunication.csproj">
+      <Project>{66d22de3-4a32-44cd-b71c-0500c7ad6579}</Project>
+      <Name>CompanyApp.ServiceCommunication</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

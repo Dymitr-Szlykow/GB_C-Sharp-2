@@ -26,7 +26,7 @@
                                     DisplayMemberBinding="{Binding Department}"/>
                         <GridViewColumn Width="auto"
                                     Header="Ф.И.О."
-                                    DisplayMemberBinding="{Binding ShortName}"/>
+                                    DisplayMemberBinding="{Binding ShortName_client}"/>
                         <GridViewColumn Width="auto"
                                     Header="Пол"
                                     DisplayMemberBinding="{Binding GenderAsChar}"/>

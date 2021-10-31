@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CompanyApp.Data
 {
-    public class Department : INotifyPropertyChanged, ICloneable, IEqualityComparer<Department>, IDatabaseEntity
+    public class Department : DatabaseEntity, IEqualityComparer<Department>
     {
         protected string _title;
         protected string _location;
         protected Employee _manager;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public static readonly string tablename = "Departments";
 
         #region СВОЙСТВА
         public string Title
@@ -49,8 +43,8 @@ namespace CompanyApp.Data
             }
         }
 
-        public int ID { get; set; }
-        public string Tablename { get => "Departments"; }
+        public override int ID { get; set; }
+        public override string Tablename { get; } = tablename;
         #endregion
 
         public Department() { }
@@ -61,7 +55,6 @@ namespace CompanyApp.Data
             Location = location;
         }
 
-        public object Clone() => MemberwiseClone();
         public bool Equals(Department x, Department y) => x.Equals(y);
         public int GetHashCode(Department obj) => obj.GetHashCode();
     }

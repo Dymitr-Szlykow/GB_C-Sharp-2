@@ -1,4 +1,4 @@
-﻿using CompanyApp.Data;
+﻿using CompanyApp.ServiceCommunication.CompanyService;
 using System;
 using System.Collections.Generic;
 using System.Linq;

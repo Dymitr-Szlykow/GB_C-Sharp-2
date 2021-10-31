@@ -14,12 +14,12 @@
         <Label Content="Фамилия:" Margin="0,57,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107"/>
         <Label Content="Отчество:" Margin="0,83,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107"/>
         <Label Content="Дата рождения:" Margin="0,109,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107"/>
-        <TextBox Text="{Binding EmployeeDetailed.Name}" Height="23" Margin="112,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding EmployeeDetailed.Surname}" Height="23" Margin="112,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding EmployeeDetailed.Patronym}" Height="23" Margin="112,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding EmployeeDetailed.Name_client}" Height="23" Margin="112,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding EmployeeDetailed.Surname_client}" Height="23" Margin="112,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding EmployeeDetailed.Patronym_client}" Height="23" Margin="112,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBox Text="{Binding EmployeeDetailed.BirthDate}" Height="23" Margin="112,112,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <RadioButton GroupName="Gender" IsChecked="{Binding EmployeeDetailed.IsMale}" Content="Мужчина" HorizontalAlignment="Left" Margin="132,137,0,0" VerticalAlignment="Top" Width="80"/>
-        <RadioButton GroupName="Gender" IsChecked="{Binding EmployeeDetailed.IsFemale}" Content="Женщина" HorizontalAlignment="Left" Margin="250,137,0,0" VerticalAlignment="Top" Width="80"/>
+        <RadioButton GroupName="Gender" IsChecked="{Binding EmployeeDetailed.IsMale_client}" Content="Мужчина" HorizontalAlignment="Left" Margin="132,137,0,0" VerticalAlignment="Top" Width="80"/>
+        <RadioButton GroupName="Gender" IsChecked="{Binding EmployeeDetailed.IsFemale_client}" Content="Женщина" HorizontalAlignment="Left" Margin="250,137,0,0" VerticalAlignment="Top" Width="80"/>
 
         <Label Content="Жалование:" Margin="0,154,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107"/>
         <TextBox Text="{Binding EmployeeDetailed.Salary}" Height="23" Margin="112,157,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
