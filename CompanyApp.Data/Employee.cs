@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CompanyApp.Data
 {
-    public class Employee : IDatabaseEntity, INotifyPropertyChanged, ICloneable
+    public class Employee : DatabaseEntity
     {
         protected string _name;
         protected string _surname;
@@ -18,14 +16,10 @@ namespace CompanyApp.Data
         protected int _salary;
         protected string _department;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public static readonly string tablename = "Employees";
 
         #region СВОЙСТВА
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -38,7 +32,7 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
-        public string Surname
+        public virtual string Surname
         {
             get
             {
@@ -51,7 +45,7 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
-        public string Patronym
+        public virtual string Patronym
         {
             get
             {
@@ -64,7 +58,7 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
-        public string BirthDate
+        public virtual string BirthDate
         {
             get => _birthDate;
             set
@@ -73,7 +67,7 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
-        public GenderType Gender
+        public virtual GenderType Gender
         {
             get => _gender;
             set
@@ -82,32 +76,32 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
-        public char GenderAsChar
+        public virtual char GenderAsChar
         {
-            get => _gender == GenderType.Male ? 'М' : 'Ж';
+            get => Gender == GenderType.Male ? 'М' : 'Ж';
             set
             {
-                if (value == 'м' || value == 'М') _gender = GenderType.Male;
-                else if (value == 'ж' || value == 'Ж') _gender = GenderType.Female;
+                if (value == 'м' || value == 'М') Gender = GenderType.Male;
+                else if (value == 'ж' || value == 'Ж') Gender = GenderType.Female;
             }
         }
-        public bool IsMale
+        public virtual bool IsMale
         {
-            get => _gender == GenderType.Male;
+            get => Gender == GenderType.Male;
             set
             {
-                if (value) _gender = GenderType.Male;
+                if (value) Gender = GenderType.Male;
             }
         }
-        public bool IsFemale
+        public virtual bool IsFemale
         {
-            get => _gender == GenderType.Female;
+            get => Gender == GenderType.Female;
             set
             {
                 if (value) Gender = GenderType.Female;
             }
         }
-        public int Salary
+        public virtual int Salary
         {
             get => _salary;
             set
@@ -116,7 +110,7 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
-        public string Department
+        public virtual string Department
         {
             get => _department;
             set
@@ -125,19 +119,19 @@ namespace CompanyApp.Data
                 NotifyPropertyChanged();
             }
         }
-        public string FullName
+        public virtual string FullName
         {
             get => $"{Name} {Patronym} {Surname}";
             set { }
         }
-        public string ShortName
+        public virtual string ShortName
         {
             get => $"{Name[0]}.{Patronym[0]}. {Surname}";
             set { }
         }
 
-        public int ID { get; set; }
-        public string Tablename { get => "Employees"; }
+        public override int ID { get; set; }
+        public override string Tablename { get; } = tablename;
         #endregion
 
         public Employee() { }
@@ -152,8 +146,6 @@ namespace CompanyApp.Data
             Salary = salary;
             Department = department;
         }
-
-        public object Clone() => this.MemberwiseClone();
     }
 
     public enum GenderType { Male, Female }

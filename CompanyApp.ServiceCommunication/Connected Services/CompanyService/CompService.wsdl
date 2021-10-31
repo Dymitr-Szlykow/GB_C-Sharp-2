@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://microsoft.com/wsdl/types/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:import namespace="http://microsoft.com/wsdl/types/" />
+      <s:element name="ManualTruncate">
+        <s:complexType />
+      </s:element>
+      <s:element name="ManualTruncateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="Download_all_employees">
+        <s:complexType />
+      </s:element>
+      <s:element name="Download_all_employeesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Download_all_employeesResult" type="tns:ArrayOfEmployee" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfEmployee">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Employee" nillable="true" type="tns:Employee" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Employee">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:DatabaseEntity">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Surname" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Patronym" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BirthDate" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Gender" type="tns:GenderType" />
+              <s:element minOccurs="1" maxOccurs="1" name="GenderAsChar" type="s1:char" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsMale" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsFemale" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="Salary" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="Department" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="FullName" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ShortName" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="DatabaseEntity" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Department">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:DatabaseEntity">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Location" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Manager" type="tns:Employee" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="GenderType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Male" />
+          <s:enumeration value="Female" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="Upload_employees">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="list" type="tns:ArrayOfEmployee" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Upload_employeesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Upload_employeesResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Insert_employee">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="entry" type="tns:Employee" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Insert_employeeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Insert_employeeResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Update_employee">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="entry" type="tns:Employee" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Update_employeeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Update_employeeResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Download_all_departments">
+        <s:complexType />
+      </s:element>
+      <s:element name="Download_all_departmentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Download_all_departmentsResult" type="tns:ArrayOfDepartment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfDepartment">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Department" nillable="true" type="tns:Department" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Upload_departments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="list" type="tns:ArrayOfDepartment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Upload_departmentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Upload_departmentsResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Insert_department">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="entry" type="tns:Department" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Insert_departmentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Insert_departmentResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Update_department">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="entry" type="tns:Department" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Update_departmentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Update_departmentResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Remove_entry">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="entry" type="tns:DatabaseEntity" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Remove_entryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Remove_entryResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/">
+      <s:simpleType name="char">
+        <s:restriction base="s:unsignedShort" />
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ManualTruncateSoapIn">
+    <wsdl:part name="parameters" element="tns:ManualTruncate" />
+  </wsdl:message>
+  <wsdl:message name="ManualTruncateSoapOut">
+    <wsdl:part name="parameters" element="tns:ManualTruncateResponse" />
+  </wsdl:message>
+  <wsdl:message name="Download_all_employeesSoapIn">
+    <wsdl:part name="parameters" element="tns:Download_all_employees" />
+  </wsdl:message>
+  <wsdl:message name="Download_all_employeesSoapOut">
+    <wsdl:part name="parameters" element="tns:Download_all_employeesResponse" />
+  </wsdl:message>
+  <wsdl:message name="Upload_employeesSoapIn">
+    <wsdl:part name="parameters" element="tns:Upload_employees" />
+  </wsdl:message>
+  <wsdl:message name="Upload_employeesSoapOut">
+    <wsdl:part name="parameters" element="tns:Upload_employeesResponse" />
+  </wsdl:message>
+  <wsdl:message name="Insert_employeeSoapIn">
+    <wsdl:part name="parameters" element="tns:Insert_employee" />
+  </wsdl:message>
+  <wsdl:message name="Insert_employeeSoapOut">
+    <wsdl:part name="parameters" element="tns:Insert_employeeResponse" />
+  </wsdl:message>
+  <wsdl:message name="Update_employeeSoapIn">
+    <wsdl:part name="parameters" element="tns:Update_employee" />
+  </wsdl:message>
+  <wsdl:message name="Update_employeeSoapOut">
+    <wsdl:part name="parameters" element="tns:Update_employeeResponse" />
+  </wsdl:message>
+  <wsdl:message name="Download_all_departmentsSoapIn">
+    <wsdl:part name="parameters" element="tns:Download_all_departments" />
+  </wsdl:message>
+  <wsdl:message name="Download_all_departmentsSoapOut">
+    <wsdl:part name="parameters" element="tns:Download_all_departmentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="Upload_departmentsSoapIn">
+    <wsdl:part name="parameters" element="tns:Upload_departments" />
+  </wsdl:message>
+  <wsdl:message name="Upload_departmentsSoapOut">
+    <wsdl:part name="parameters" element="tns:Upload_departmentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="Insert_departmentSoapIn">
+    <wsdl:part name="parameters" element="tns:Insert_department" />
+  </wsdl:message>
+  <wsdl:message name="Insert_departmentSoapOut">
+    <wsdl:part name="parameters" element="tns:Insert_departmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="Update_departmentSoapIn">
+    <wsdl:part name="parameters" element="tns:Update_department" />
+  </wsdl:message>
+  <wsdl:message name="Update_departmentSoapOut">
+    <wsdl:part name="parameters" element="tns:Update_departmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="Remove_entrySoapIn">
+    <wsdl:part name="parameters" element="tns:Remove_entry" />
+  </wsdl:message>
+  <wsdl:message name="Remove_entrySoapOut">
+    <wsdl:part name="parameters" element="tns:Remove_entryResponse" />
+  </wsdl:message>
+  <wsdl:portType name="CompServiceSoap">
+    <wsdl:operation name="ManualTruncate">
+      <wsdl:input message="tns:ManualTruncateSoapIn" />
+      <wsdl:output message="tns:ManualTruncateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadAllEmployees">
+      <wsdl:input name="Download_all_employees" message="tns:Download_all_employeesSoapIn" />
+      <wsdl:output name="Download_all_employees" message="tns:Download_all_employeesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadEmployees">
+      <wsdl:input name="Upload_employees" message="tns:Upload_employeesSoapIn" />
+      <wsdl:output name="Upload_employees" message="tns:Upload_employeesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="InsertEmployee">
+      <wsdl:input name="Insert_employee" message="tns:Insert_employeeSoapIn" />
+      <wsdl:output name="Insert_employee" message="tns:Insert_employeeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEmployee">
+      <wsdl:input name="Update_employee" message="tns:Update_employeeSoapIn" />
+      <wsdl:output name="Update_employee" message="tns:Update_employeeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadAllDepartments">
+      <wsdl:input name="Download_all_departments" message="tns:Download_all_departmentsSoapIn" />
+      <wsdl:output name="Download_all_departments" message="tns:Download_all_departmentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadDepartments">
+      <wsdl:input name="Upload_departments" message="tns:Upload_departmentsSoapIn" />
+      <wsdl:output name="Upload_departments" message="tns:Upload_departmentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="InsertDepartment">
+      <wsdl:input name="Insert_department" message="tns:Insert_departmentSoapIn" />
+      <wsdl:output name="Insert_department" message="tns:Insert_departmentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateDepartment">
+      <wsdl:input name="Update_department" message="tns:Update_departmentSoapIn" />
+      <wsdl:output name="Update_department" message="tns:Update_departmentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Remove">
+      <wsdl:input name="Remove_entry" message="tns:Remove_entrySoapIn" />
+      <wsdl:output name="Remove_entry" message="tns:Remove_entrySoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CompServiceSoap" type="tns:CompServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ManualTruncate">
+      <soap:operation soapAction="http://tempuri.org/ManualTruncate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadAllEmployees">
+      <soap:operation soapAction="http://tempuri.org/Download_all_employees" style="document" />
+      <wsdl:input name="Download_all_employees">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Download_all_employees">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadEmployees">
+      <soap:operation soapAction="http://tempuri.org/Upload_employees" style="document" />
+      <wsdl:input name="Upload_employees">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Upload_employees">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertEmployee">
+      <soap:operation soapAction="http://tempuri.org/Insert_employee" style="document" />
+      <wsdl:input name="Insert_employee">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Insert_employee">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEmployee">
+      <soap:operation soapAction="http://tempuri.org/Update_employee" style="document" />
+      <wsdl:input name="Update_employee">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Update_employee">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadAllDepartments">
+      <soap:operation soapAction="http://tempuri.org/Download_all_departments" style="document" />
+      <wsdl:input name="Download_all_departments">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Download_all_departments">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadDepartments">
+      <soap:operation soapAction="http://tempuri.org/Upload_departments" style="document" />
+      <wsdl:input name="Upload_departments">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Upload_departments">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertDepartment">
+      <soap:operation soapAction="http://tempuri.org/Insert_department" style="document" />
+      <wsdl:input name="Insert_department">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Insert_department">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateDepartment">
+      <soap:operation soapAction="http://tempuri.org/Update_department" style="document" />
+      <wsdl:input name="Update_department">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Update_department">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Remove">
+      <soap:operation soapAction="http://tempuri.org/Remove_entry" style="document" />
+      <wsdl:input name="Remove_entry">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Remove_entry">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="CompServiceSoap12" type="tns:CompServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ManualTruncate">
+      <soap12:operation soapAction="http://tempuri.org/ManualTruncate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadAllEmployees">
+      <soap12:operation soapAction="http://tempuri.org/Download_all_employees" style="document" />
+      <wsdl:input name="Download_all_employees">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Download_all_employees">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadEmployees">
+      <soap12:operation soapAction="http://tempuri.org/Upload_employees" style="document" />
+      <wsdl:input name="Upload_employees">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Upload_employees">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertEmployee">
+      <soap12:operation soapAction="http://tempuri.org/Insert_employee" style="document" />
+      <wsdl:input name="Insert_employee">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Insert_employee">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEmployee">
+      <soap12:operation soapAction="http://tempuri.org/Update_employee" style="document" />
+      <wsdl:input name="Update_employee">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Update_employee">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadAllDepartments">
+      <soap12:operation soapAction="http://tempuri.org/Download_all_departments" style="document" />
+      <wsdl:input name="Download_all_departments">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Download_all_departments">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadDepartments">
+      <soap12:operation soapAction="http://tempuri.org/Upload_departments" style="document" />
+      <wsdl:input name="Upload_departments">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Upload_departments">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertDepartment">
+      <soap12:operation soapAction="http://tempuri.org/Insert_department" style="document" />
+      <wsdl:input name="Insert_department">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Insert_department">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateDepartment">
+      <soap12:operation soapAction="http://tempuri.org/Update_department" style="document" />
+      <wsdl:input name="Update_department">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Update_department">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Remove">
+      <soap12:operation soapAction="http://tempuri.org/Remove_entry" style="document" />
+      <wsdl:input name="Remove_entry">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Remove_entry">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CompService">
+    <wsdl:port name="CompServiceSoap" binding="tns:CompServiceSoap">
+      <soap:address location="https://localhost:44314/CompService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="CompServiceSoap12" binding="tns:CompServiceSoap12">
+      <soap12:address location="https://localhost:44314/CompService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

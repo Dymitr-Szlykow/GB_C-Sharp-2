@@ -88,9 +88,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CompanyApp.Data\CompanyApp.Data.csproj">
-      <Project>{76422670-5ad3-421b-ad6b-71c8640b5c2e}</Project>
-      <Name>CompanyApp.Data</Name>
+    <ProjectReference Include="..\CompanyApp.ServiceCommunication\CompanyApp.ServiceCommunication.csproj">
+      <Project>{66d22de3-4a32-44cd-b71c-0500c7ad6579}</Project>
+      <Name>CompanyApp.ServiceCommunication</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
